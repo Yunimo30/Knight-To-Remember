@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Knight to Remember</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="main-menu-screen">
+        <div class="menu-content">
+            <h1 class="game-title">A Knight to Remember</h1>
+            <div class="menu-buttons">
+                <button id="btn-start-game" class="menu-btn">Start Journey</button>
+                <button id="btn-tutorial" class="menu-btn">How To Play</button>
+            </div>
+            <div class="credits">Created by: Yunimo30</div>
+        </div>
+    </div>
+
+    <div id="tutorial-screen" class="hidden">
+        <div class="tutorial-paper">
+            <h2>How To Play</h2>
+            <div class="tutorial-text">
+                <p><strong>⚔️ Combat:</strong> Answer questions correctly to attack enemies. Wrong answers give the enemy a turn!</p>
+                <p><strong>🛡️ Defense:</strong> During the enemy turn, a slider will appear. Press <strong>[SPACE]</strong> in the Red Zone to block damage.</p>
+                <p><strong>🗺️ Map:</strong> Navigate the Dark Forest. Choose your path wisely—some lead to treasure, others to danger.</p>
+                <p><strong>🎒 Items:</strong> Use potions from your inventory to heal between or during battles.</p>
+            </div>
+            <button id="btn-close-tutorial" class="menu-btn small">Back to Menu</button>
+        </div>
+    </div>
+
+    <div id="cutscene-screen" class="hidden">
+        <div class="lore-container">
+            <p id="lore-text">
+                The Kingdom of Syntax has fallen.<br><br>
+                A dark corruption spreads through the Forest of Logic, scrambling the very code of our reality.<br><br>
+                The Princess, the only one who holds the Source Key, has vanished.<br><br>
+                You, a lone Knight, must traverse the bug-ridden woods, debug the enemies, and restore order.<br><br>
+                Prepare yourself... logic is your only weapon.
+            </p>
+        </div>
+        <button id="btn-skip-cutscene">Skip >></button>
+    </div>
+
+    <div id="game-container" class="hidden">
+        
+        <div id="transition-overlay" class="hidden"></div>
+        <div id="input-blocker" class="hidden"></div>
+
+        <div id="map-screen">
+            <h2>🌲 Dark Forest Map 🌲</h2>
+            <div id="map-nodes-container">
+                </div>
+        </div>
+
+        <div id="event-screen" class="hidden">
+            <div class="event-content">
+                <h2 id="event-title">Exploring...</h2>
+                <div id="event-icon"><i class="fa-solid fa-question"></i></div>
+                <p id="event-desc">You carefully navigate the dark forest...</p>
+            </div>
+        </div>
+
+        <div id="scroll-modal" class="hidden">
+            <div class="scroll-handle top"></div>
+            <div class="scroll-paper">
+                <div class="scroll-inner-content">
+                    <h2 id="scroll-title">Stage Name</h2>
+                    <div class="scroll-divider"></div>
+                    <p id="scroll-desc">Description of the stage...</p>
+                    <div class="scroll-actions">
+                        <button id="scroll-btn-go" class="scroll-btn confirm">Venture Forth</button>
+                        <button id="scroll-btn-close" class="scroll-btn cancel">Retreat</button>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-handle bottom"></div>
+        </div>
+
+        <div id="turn-banner" class="turn-banner">PLAYER TURN</div>
+
+        <div id="battle-arena">
+            <div id="player-area">
+                <div class="hp-container">
+                    <span class="hp-label">Knight</span>
+                    <div id="player-hp-bar" class="hearts"></div>
+                </div>
+                <div id="player-sprite" class="sprite"><i class="fa-solid fa-user-shield"></i></div>
+            </div>
+
+            <div id="enemy-area">
+                <div class="hp-container">
+                    <span id="enemy-name" class="hp-label">Enemy</span>
+                    <div id="enemy-hp-bar" class="hearts"></div>
+                </div>
+                <div id="enemy-sprite" class="sprite"><i class="fa-solid fa-skull"></i></div>
+            </div>
+
+            <div id="flash-overlay"></div>
+
+            <div id="qte-container" class="hidden">
+                <p>PRESS [SPACE] TO BLOCK!</p>
+                <div id="qte-bar">
+                    <div id="qte-target-zone"></div>
+                    <div id="qte-cursor"></div>
+                </div>
+            </div>
+
+            <div id="combat-feedback" class="hidden">Correct!</div>
+        </div>
+
+        <div id="ui-dashboard">
+            
+            <div class="panel-side" id="panel-left">
+                <div class="stat-box">
+                    <h3>LEVEL</h3>
+                    <p id="level-indicator">1</p>
+                </div>
+                <button id="btn-use-hint" class="interactive-stat">
+                    <h3>HINT (Use)</h3>
+                    <p id="hint-counter"><i class="fa-solid fa-lightbulb"></i> x 1</p>
+                </button>
+            </div>
+
+            <div class="panel-quiz">
+                <div id="timer-container">
+                    <div id="timer-bar-left" class="timer-bar"></div>
+                    <div id="timer-bar-right" class="timer-bar"></div>
+                </div>
+
+                <div id="question-box">
+                    <p id="question-text">Loading...</p>
+                </div>
+                <div id="answer-grid">
+                    <button class="answer-btn" id="btn-0">A</button>
+                    <button class="answer-btn" id="btn-1">B</button>
+                    <button class="answer-btn" id="btn-2">C</button>
+                    <button class="answer-btn" id="btn-3">D</button>
+                </div>
+            </div>
+
+            <div class="panel-side" id="panel-right">
+                <button id="btn-items" class="control-btn"><i class="fa-solid fa-briefcase"></i> ITEMS</button>
+                <button id="btn-menu" class="control-btn"><i class="fa-solid fa-gear"></i> MENU</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="inventory-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎒 Inventory</h2>
+            <ul id="inventory-list">
+                <li>No items yet...</li>
+            </ul>
+            <div class="modal-actions">
+                <button id="close-inventory" class="scroll-btn confirm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script> 
+</body>
+</html>

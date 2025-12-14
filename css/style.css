@@ -1,0 +1,654 @@
+/* --- RESET & BASIC STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', 'Times New Roman', serif; /* Medieval Font */
+    user-select: none;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #3e2723;
+    overflow: hidden;
+}
+
+/* --- GAME CONTAINER --- */
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #2c2c2c;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    position: relative;
+    border: 4px solid #3e2723; /* Dark Wood Border */
+}
+
+/* --- TOP HALF: BATTLE ARENA (50%) --- */
+#battle-arena {
+    height: 50%;
+    width: 100%;
+    position: relative;
+    background-color: #2c3e50; /* Fallback */
+    background-image: url('../assets/images/forestbg.png'); /* YOUR IMAGE */
+    background-size: cover;
+    background-position: center;
+    border-bottom: 8px solid #3e2723; /* Wooden Beam Separator */
+    box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
+}
+
+/* SPRITES & POSITIONS */
+#player-area { position: absolute; bottom: 30px; left: 15%; text-align: center; }
+#enemy-area { position: absolute; bottom: 30px; right: 15%; text-align: center; }
+
+.sprite {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5));
+}
+#player-sprite i, #enemy-sprite i {
+    font-size: 5rem;
+    color: white;
+    text-shadow: 0 0 5px black;
+}
+
+/* HP BARS */
+.hp-container {
+    background-color: rgba(0,0,0,0.7);
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 2px solid #8d6e63;
+    color: #f3e5ab;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+.hearts { color: #e74c3c; text-shadow: 0 2px 2px black; font-size: 1.2rem; }
+
+/* TURN BANNER (Scroll Look) */
+.turn-banner {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f3e5ab;
+    color: #3e2723;
+    padding: 8px 30px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    z-index: 20;
+    border: 2px solid #5d4037;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    min-width: 200px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* FEEDBACK TEXT (Correct/Wrong) */
+#combat-feedback {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px 40px;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 4px solid #f1c40f;
+    z-index: 30;
+    text-align: center;
+}
+
+/* --- BOTTOM HALF: UI DASHBOARD (Wooden Table) --- */
+#ui-dashboard {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    background-color: #5d4037; /* Wood Color */
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 4px);
+    position: relative;
+    z-index: 10;
+    border-top: 2px solid #8d6e63;
+}
+
+/* ANIMATION: SLIDE UP */
+@keyframes slideUpFade {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* PANELS */
+.panel-side {
+    width: 18%;
+    background-color: #4e342e; /* Darker Wood */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-left: 2px solid #3e2723;
+    border-right: 2px solid #3e2723;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.panel-quiz {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    background-color: rgba(0,0,0,0.2); /* Shadow Mat */
+}
+
+/* STAT BOXES */
+.stat-box, .interactive-stat {
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: #3e2723;
+    color: #f3e5ab;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    border: 1px solid #8d6e63;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.interactive-stat {
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.interactive-stat:hover {
+    background-color: #4e342e;
+    border-color: #f1c40f;
+}
+.interactive-stat:active { transform: scale(0.95); }
+
+/* TIMER BAR */
+#timer-container {
+    width: 100%;
+    height: 12px;
+    background-color: #3e2723;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #5d4037;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 50%;
+    background-color: #f1c40f;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    transition: width 0.1s linear, background-color 0.2s;
+}
+
+#timer-bar-left { border-right: 1px solid rgba(255,255,255,0.2); }
+
+/* QUIZ PAPER (Parchment) */
+#question-box {
+    background-color: #f3e5ab;
+    padding: 20px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3e2723;
+    border: 1px solid #d7c99e;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+/* Pins */
+#question-box::after, #question-box::before {
+    content: ''; position: absolute; top: 5px; width: 8px; height: 8px; 
+    background-color: #3e2723; border-radius: 50%;
+}
+#question-box::before { left: 5px; }
+#question-box::after { right: 5px; }
+
+/* ANSWER GRID */
+#answer-grid {
+    height: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.answer-btn {
+    background-color: #fcf3cf;
+    border: 2px solid #8d6e63;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #3e2723;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 0 3px 0 #8d6e63;
+}
+
+.answer-btn:hover:not(:disabled) { 
+    background-color: #fff; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #8d6e63;
+}
+.answer-btn:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #8d6e63;
+}
+.answer-btn:disabled {
+    background-color: #bdc3c7;
+    border-color: #7f8c8d;
+    box-shadow: none;
+    color: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* CONTROL BUTTONS */
+.control-btn {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px black;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+}
+#btn-items { background-color: #d35400; }
+#btn-menu { background-color: #7f8c8d; }
+.control-btn:active { transform: translateY(3px); box-shadow: none; }
+
+/* --- MAP SCREEN (Dark Forest Theme) --- */
+#map-screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #2c2c2c;
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../assets/images/forestbg.png');
+    background-size: cover;
+    z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #f3e5ab;
+}
+
+#map-nodes-container {
+    display: flex; flex-direction: row; justify-content: center; align-items: center;
+    gap: 60px; padding: 0 50px; height: 60%; width: 100%; overflow-x: auto;
+    /* Add a subtle "path" line behind nodes if desired, or keep clean */
+}
+
+.map-row {
+    display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center;
+}
+
+/* MEDIEVAL MAP NODES (Runestones) */
+.map-node {
+    width: 90px; /* Increased from 70px */
+    height: 90px;
+    background-color: #7f8c8d; /* Fallback */
+    /* Stone Texture Gradient */
+    background-image: radial-gradient(circle at 30% 30%, #95a5a6, #566573);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    /* Rough Stone Border */
+    border: 4px solid #2c3e50;
+    cursor: pointer;
+    font-weight: bold; 
+    color: #f3e5ab; /* Parchment Text */
+    text-shadow: 1px 1px 2px black;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+    /* Text Handling */
+    text-align: center;
+    font-size: 0.85rem; /* Slightly smaller text to fit more */
+    padding: 5px; /* Padding to prevent text touching edges */
+    line-height: 1.1;
+    overflow: hidden;
+}
+
+.map-node span {
+    z-index: 2; /* Ensure text sits on top of any potential overlay */
+}
+
+.map-node:hover { 
+    transform: scale(1.15); 
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+    z-index: 10;
+}
+
+/* VARIATIONS */
+
+/* COMPLETED (Mossy Stone / Emerald) */
+.map-node.completed { 
+    background-image: radial-gradient(circle at 30% 30%, #2ecc71, #145a32);
+    border-color: #1e8449;
+    color: white; 
+}
+
+/* AVAILABLE (Glowing Gold Rune) */
+.map-node.available { 
+    background-image: radial-gradient(circle at 30% 30%, #f1c40f, #b7950b);
+    border-color: #d35400; 
+    color: #3e2723; 
+    text-shadow: none;
+    animation: runePulse 2s infinite; 
+}
+
+/* LOCKED (Dark Obsidian) */
+.map-node.locked { 
+    background-image: radial-gradient(circle at 30% 30%, #34495e, #1c2833);
+    border-color: #000;
+    opacity: 0.7; 
+    color: #7f8c8d; 
+    pointer-events: none;
+}
+
+/* OBSCURED (Foggy/Mystery) */
+.map-node.obscured { 
+    background-color: transparent; 
+    background-image: none;
+    border: 3px dashed #7f8c8d; 
+    color: #bdc3c7; 
+    pointer-events: none;
+    box-shadow: none;
+}
+
+/* BOSS NODE (Large Red Wax Seal) */
+.map-node.boss { 
+    width: 110px; height: 110px; 
+    background-image: radial-gradient(circle at 30% 30%, #e74c3c, #922b21);
+    border: 5px double #c0392b; 
+    color: white; 
+    font-size: 1rem;
+}
+
+.hidden-rank { display: none; }
+
+/* ANIMATIONS */
+@keyframes runePulse {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
+    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(241, 196, 15, 0.9); border-color: #f1c40f;}
+    100% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
+}
+
+/* --- SCROLL MODAL --- */
+#scroll-modal {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 150; display: flex; flex-direction: column; align-items: center; width: 320px;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
+    transition: opacity 0.2s;
+}
+#scroll-modal.hidden { opacity: 0; pointer-events: none; }
+
+.scroll-handle {
+    width: 360px; height: 25px;
+    background: linear-gradient(to right, #3e2723, #5d4037, #3e2723);
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5); z-index: 152;
+}
+
+.scroll-paper {
+    width: 300px;
+    background-color: #f3e5ab;
+    /* Optional Texture if you have one, else solid color is fine */
+    /* background-image: url('../assets/images/paper_texture.png'); */
+    overflow: hidden;
+    height: 0; transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 151; position: relative;
+    border-left: 1px solid #d7c99e; border-right: 1px solid #d7c99e;
+}
+
+#scroll-modal.active .scroll-paper { height: 320px; }
+
+.scroll-inner-content {
+    padding: 25px; text-align: center; color: #3e2723;
+    opacity: 0; transition: opacity 0.3s ease-in 0.3s;
+    display: flex; flex-direction: column; height: 100%; justify-content: center;
+}
+#scroll-modal.active .scroll-inner-content { opacity: 1; }
+
+#scroll-title {
+    font-family: 'Georgia', serif; font-size: 1.6rem; margin-bottom: 10px;
+    color: #3e2723; text-transform: uppercase; border-bottom: 2px solid #8d6e63;
+    padding-bottom: 5px;
+}
+#scroll-desc { font-style: italic; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
+
+.scroll-btn {
+    padding: 10px 20px; border: 2px solid #3e2723; border-radius: 4px;
+    font-weight: bold; cursor: pointer; font-family: 'Georgia', serif;
+}
+.scroll-btn.confirm { background-color: #3e2723; color: #f3e5ab; }
+.scroll-btn.confirm:hover { background-color: #5d4037; }
+.scroll-btn.cancel { background-color: transparent; color: #3e2723; border: none; text-decoration: underline;}
+
+/* --- TRANSITION OVERLAY --- */
+#transition-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: black; z-index: 9999; opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease-in-out;
+}
+#transition-overlay.active { opacity: 1; pointer-events: all; }
+
+/* --- EVENT SCREEN --- */
+#event-screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #2c2c2c; /* Fallback */
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../assets/images/forestbg.png');
+    background-size: cover;
+    z-index: 80;
+    display: flex; justify-content: center; align-items: center;
+    color: #f3e5ab; text-align: center;
+}
+.event-content {
+    background-color: rgba(62, 39, 35, 0.9); /* Transparent Wood */
+    padding: 40px; border-radius: 10px; border: 2px solid #8d6e63;
+    animation: fadeIn 0.5s;
+}
+#event-icon { font-size: 5rem; margin: 20px 0; color: #f1c40f; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- QTE (DEFENSE) --- */
+#qte-container {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 60%; background-color: rgba(0,0,0,0.8);
+    padding: 10px; border-radius: 10px; text-align: center;
+    color: white; z-index: 50; border: 2px solid #f39c12;
+}
+#qte-bar {
+    width: 100%; height: 30px; background-color: #333;
+    position: relative; border-radius: 15px; overflow: hidden; margin-top: 10px;
+}
+#qte-target-zone {
+    position: absolute; height: 100%; width: 20%; background-color: #e74c3c; top: 0;
+}
+#qte-cursor {
+    position: absolute; height: 100%; width: 5px; background-color: white; top: 0; left: 0; box-shadow: 0 0 10px white;
+}
+
+/* --- INVENTORY MODAL --- */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center; z-index: 120;
+}
+.modal-content {
+    background-color: #f3e5ab; /* Parchment */
+    padding: 30px; border-radius: 5px; border: 4px solid #3e2723;
+    width: 400px; max-width: 90%; text-align: center; color: #3e2723;
+}
+.modal-actions { margin-top: 20px; }
+.hidden { display: none !important; }
+.hidden-map { display: none !important; }
+
+/* --- INPUT BLOCKER --- */
+#input-blocker {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 90; background-color: rgba(0,0,0,0.1); cursor: not-allowed;
+}
+
+/* --- ANIMATIONS (Combat) --- */
+@keyframes attack-lunge-right {
+    0% { transform: translateX(0); } 50% { transform: translateX(100px); } 100% { transform: translateX(0); }
+}
+@keyframes attack-lunge-left {
+    0% { transform: translateX(0); } 50% { transform: translateX(-100px); } 100% { transform: translateX(0); }
+}
+@keyframes flash-red {
+    0% { background-color: rgba(255,0,0,0); } 20% { background-color: rgba(255,0,0,0.4); } 100% { background-color: rgba(255,0,0,0); }
+}
+.anim-attack-player { animation: attack-lunge-right 0.3s ease-in-out; }
+.anim-attack-enemy { animation: attack-lunge-left 0.3s ease-in-out; }
+.anim-damage-flash { animation: flash-red 0.5s ease-out; }
+
+/* Flash Overlay Element */
+#flash-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 5;
+}
+
+
+
+
+
+
+
+
+/* --- MAIN MENU STYLES --- */
+#main-menu-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../assets/images/forestbg.png');
+    background-size: cover; background-position: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2000; /* Top Priority */
+    text-align: center;
+}
+
+.game-title {
+    font-size: 4rem;
+    color: #f1c40f; /* Gold */
+    text-transform: uppercase;
+    text-shadow: 0 5px 15px rgba(0,0,0,1);
+    margin-bottom: 50px;
+    font-family: 'Georgia', serif;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #8d6e63;
+    padding-bottom: 20px;
+}
+
+.menu-buttons {
+    display: flex; flex-direction: column; gap: 20px; width: 300px;
+}
+
+.menu-btn {
+    padding: 15px;
+    font-size: 1.2rem;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    color: #3e2723;
+    background-color: #f3e5ab; /* Parchment */
+    border: 4px solid #5d4037;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.menu-btn:hover {
+    transform: scale(1.05);
+    background-color: #fff;
+    border-color: #f1c40f;
+}
+
+.credits {
+    position: absolute; bottom: 20px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+}
+
+/* --- TUTORIAL SCREEN --- */
+#tutorial-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(0,0,0,0.85);
+    z-index: 2100;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.tutorial-paper {
+    background-color: #f3e5ab;
+    padding: 40px; width: 600px; max-width: 90%;
+    border-radius: 5px;
+    border: 4px solid #3e2723;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+.tutorial-paper h2 { color: #3e2723; margin-bottom: 20px; border-bottom: 2px solid #8d6e63; display: inline-block;}
+
+.tutorial-text { text-align: left; margin-bottom: 30px; line-height: 1.6; color: #3e2723; font-size: 1.1rem;}
+.tutorial-text p { margin-bottom: 15px; }
+
+.menu-btn.small { width: auto; padding: 10px 30px; font-size: 1rem; }
+
+/* --- CUTSCENE SCREEN --- */
+#cutscene-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: black;
+    z-index: 1900; /* Below Menu, Above Game */
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white;
+}
+
+.lore-container {
+    max-width: 700px;
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 1.8;
+    animation: fadeUp 20s linear forwards; /* Slow scroll effect */
+    opacity: 0;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-50px); }
+}
+
+#btn-skip-cutscene {
+    position: absolute; bottom: 30px; right: 30px;
+    background: transparent; border: 1px solid white; color: white;
+    padding: 10px 20px; cursor: pointer; opacity: 0.7;
+}
+#btn-skip-cutscene:hover { opacity: 1; background-color: rgba(255,255,255,0.1); }

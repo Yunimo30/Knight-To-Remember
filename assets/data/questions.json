@@ -1,0 +1,34 @@
+{
+  "topics": [
+    {
+      "id": "java_basics",
+      "name": "Java Basics",
+      "questions": [
+        { "text": "What is the correct syntax to output 'Hello World' in Java?", "answers": ["print('Hello World');", "System.out.println('Hello World');", "Console.WriteLine('Hello World');", "echo 'Hello World';"], "correct": 1, "difficulty": "easy" },
+        { "text": "Which data type is used to store text?", "answers": ["String", "txt", "string", "Text"], "correct": 0, "difficulty": "easy" },
+        { "text": "How do you insert COMMENTS in Java code?", "answers": ["# Comment", "/* Comment", "// Comment", "?Comment"], "correct": 2, "difficulty": "easy" },
+        { "text": "Which data type specifies a single character?", "answers": ["String", "Char", "character", "char"], "correct": 3, "difficulty": "easy" },
+        { "text": "Which variable name is invalid?", "answers": ["myVar", "my_var", "9myVar", "_myVar"], "correct": 2, "difficulty": "easy" },
+        { "text": "How do you declare an integer variable?", "answers": ["int x;", "num x;", "integer x;", "x = 5;"], "correct": 0, "difficulty": "easy" },
+        { "text": "What is the size of an 'int' data type?", "answers": ["8 bit", "16 bit", "32 bit", "64 bit"], "correct": 2, "difficulty": "hard" },
+        { "text": "Which keyword defines a constant variable?", "answers": ["const", "final", "static", "immutable"], "correct": 1, "difficulty": "hard" },
+        { "text": "Which loop is guaranteed to run at least once?", "answers": ["for", "while", "do-while", "foreach"], "correct": 2, "difficulty": "medium" },
+        { "text": "Which operator is used to compare two values?", "answers": ["=", "==", "<>", "><"], "correct": 1, "difficulty": "easy" }
+      ]
+    },
+    {
+      "id": "oop_concepts",
+      "name": "OOP Concepts",
+      "questions": [
+        { "text": "What does OOP stand for?", "answers": ["Object-Only Programming", "Over Orientation Platform", "Object-Oriented Programming", "Objective Oriented Pathwork"], "correct": 2, "difficulty": "easy" },
+        { "text": "Which concept allows a class to acquire properties of another class?", "answers": ["Polymorphism", "Inheritance", "Encapsulation", "Abstraction"], "correct": 1, "difficulty": "easy" },
+        { "text": "Which keyword is used to create an object?", "answers": ["class", "new", "obj", "create"], "correct": 1, "difficulty": "easy" },
+        { "text": "Private, Public, and Protected are examples of?", "answers": ["Access Modifiers", "Polymorphism", "Constructors", "Methods"], "correct": 0, "difficulty": "hard" },
+        { "text": "What is the return type of a Constructor?", "answers": ["int", "void", "String", "None"], "correct": 3, "difficulty": "hard" },
+        { "text": "Which keyword refers to the current object?", "answers": ["super", "this", "that", "object"], "correct": 1, "difficulty": "medium" },
+        { "text": "Hiding internal details and showing functionality is known as?", "answers": ["Encapsulation", "Abstraction", "Inheritance", "Polymorphism"], "correct": 1, "difficulty": "hard" },
+        { "text": "Which method is the entry point of a Java program?", "answers": ["start()", "main()", "init()", "run()"], "correct": 1, "difficulty": "easy" }
+      ]
+    }
+  ]
+}
