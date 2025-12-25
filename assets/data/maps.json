@@ -1,0 +1,52 @@
+{
+"world_1": {
+    "name": "The Syntax Forest",
+    "background": "forestbg.png",
+    "nodes": [
+        { "id": 0, "type": "start", "name": "Entrance", "desc": "The journey begins.", "connections": [1], "status": "completed" },
+        
+        { "id": 1, "type": "lesson", "name": "Ancient Scroll: Vars", "topicId": "java_types", "desc": "Study the basics.", "connections": [2], "status": "unlocked" },
+        
+        { "id": 2, "type": "enemy", "name": "Var Valley", "topicId": "java_types", "desc": "Wild variables appear!", "difficulty": "easy", "connections": [3], "status": "locked" },
+        
+        { "id": 3, "type": "lesson", "name": "Ancient Scroll: Print", "topicId": "java_print", "desc": "Learn to speak.", "connections": [4], "status": "locked" },
+        
+        { "id": 4, "type": "enemy", "name": "Null Pointer Pit", "topicId": "java_print", "desc": "Sticky data leaks.", "difficulty": "easy", "connections": [5], "status": "locked" },
+        
+        { "id": 5, "type": "miniboss", "name": "Stone Sentry", "topicId": "java_basics", "desc": "A static blocker.", "difficulty": "medium", "connections": [6, 7], "status": "locked" },
+        
+        { "id": 6, "type": "item", "name": "Heap Memory", "desc": "Stored supplies.", "connections": [8], "status": "locked" },
+        { "id": 7, "type": "enemy", "name": "Syntax Ridge", "topicId": "java_types", "desc": "Harder foes.", "difficulty": "medium", "connections": [8], "status": "locked" },
+        
+        { "id": 8, "type": "wildcard", "name": "Glitch Grove", "desc": "Reality flickers here.", "connections": [9], "status": "locked" },
+        { "id": 9, "type": "enemy", "name": "Compiler's Gate", "topicId": "java_print", "desc": "The final check.", "difficulty": "medium", "connections": [10], "status": "locked" },
+        
+        { "id": 10, "type": "boss", "name": "Syntax Guardian", "topicId": "java_basics", "desc": "The Compiler of Stone.", "difficulty": "hard", "connections": [], "status": "locked" }
+    ]
+  },
+  
+  "world_2": {
+    "name": "The Logic Caves",
+    "background": "cavebg.png",
+    "nodes": [
+        { "id": 0, "type": "start", "name": "Cave Mouth", "desc": "The air grows cold.", "connections": [1], "status": "completed" },
+        
+        { "id": 1, "type": "enemy", "name": "Split Decision", "topicId": "java_logic", "desc": "The path divides ahead.", "difficulty": "easy", "connections": [2, 4], "status": "unlocked" },
+        
+
+        { "id": 2, "type": "enemy", "name": "If-Else Tunnel", "topicId": "java_logic", "desc": "Choose your condition.", "difficulty": "medium", "connections": [3], "status": "locked" },
+        { "id": 3, "type": "item", "name": "Hidden Nook", "desc": "A quiet spot to rest.", "connections": [6], "status": "locked" },
+        
+
+        { "id": 4, "type": "enemy", "name": "Boolean Bat", "topicId": "java_bool", "desc": "True or False?", "difficulty": "medium", "connections": [5], "status": "locked" },
+        { "id": 5, "type": "wildcard", "name": "Echo Chamber", "desc": "Strange sounds echo here.", "connections": [6], "status": "locked" },
+        
+
+        { "id": 6, "type": "enemy", "name": "Logic Gate", "topicId": "java_logic", "desc": "The paths merge.", "difficulty": "hard", "connections": [7], "status": "locked" },
+        
+
+        { "id": 7, "type": "boss", "name": "The Compiler", "topicId": "java_logic", "desc": "The master of rules.", "difficulty": "hard", "connections": [], "status": "locked" }
+    ]
+  }
+
+}

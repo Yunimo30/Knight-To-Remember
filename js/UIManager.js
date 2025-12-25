@@ -9,6 +9,14 @@ const ui = {
         document.getElementById('btn-2'),
         document.getElementById('btn-3')
     ],
+    // NEW Elements
+    codeSnippet: document.getElementById('code-snippet'),
+    answerGrid: document.getElementById('answer-grid'),
+    inputContainer: document.getElementById('input-answer-container'),
+    playerInput: document.getElementById('player-input'),
+    submitBtn: document.getElementById('btn-submit-input'),
+    
+    // Existing Elements
     playerHpBar: document.getElementById('player-hp-bar'),
     enemyHpBar: document.getElementById('enemy-hp-bar'),
     enemyName: document.getElementById('enemy-name'),
@@ -17,16 +25,12 @@ const ui = {
     combatFeedback: document.getElementById('combat-feedback'),
     turnBanner: document.getElementById('turn-banner'),
     flashOverlay: document.getElementById('flash-overlay'),
-    
-    // New Elements
-    hintBtn: document.getElementById('btn-use-hint'),
     hintCounter: document.getElementById('hint-counter'),
     levelIndicator: document.getElementById('level-indicator'),
     timerLeft: document.getElementById('timer-bar-left'),
     timerRight: document.getElementById('timer-bar-right'),
     dashboard: document.getElementById('ui-dashboard'),
 
-    // --- SETUP & UPDATES ---
     setupEnemy(enemyData) {
         this.enemyName.innerText = enemyData.name;
         this.enemySprite.innerHTML = `<i class="fa-solid ${enemyData.icon}"></i>`;
@@ -34,12 +38,8 @@ const ui = {
     },
 
     updateStats() {
-        if(this.levelIndicator) this.levelIndicator.innerText = GameState.level.current;
-        
-        if(this.hintCounter) {
-            this.hintCounter.innerHTML = `<i class="fa-solid fa-lightbulb"></i> x ${GameState.player.hints}`;
-        }
-        
+        if(this.levelIndicator) this.levelIndicator.innerText = GameState.level ? GameState.level.current : 1;
+        if(this.hintCounter) this.hintCounter.innerHTML = `<i class="fa-solid fa-lightbulb"></i> x ${GameState.player.hints}`;
         this.renderHearts(this.playerHpBar, GameState.player.currentHp);
         this.renderHearts(this.enemyHpBar, GameState.enemy.currentHp);
     },
@@ -51,26 +51,50 @@ const ui = {
         }
     },
 
-    // --- TURN & QUESTION LOGIC ---
     setTurnIndicator(isPlayer) {
         this.turnBanner.innerText = isPlayer ? "YOUR TURN" : "ENEMY ATTACKING!";
         this.turnBanner.style.backgroundColor = isPlayer ? "#27ae60" : "#c0392b";
     },
 
+    // --- NEW DISPLAY LOGIC ---
     displayQuestion(questionObj) {
         this.questionText.innerText = questionObj.text;
         
-        // Reset Buttons (Re-enable and style)
-        this.answerButtons.forEach((btn, index) => {
-            btn.innerText = questionObj.answers[index];
-            btn.disabled = false;
-            btn.style.opacity = '1';
-            btn.style.backgroundColor = '#ecf0f1'; 
-            btn.classList.remove('hidden');
-        });
+        // 1. Check Type: Code Fill-in
+        if (questionObj.type === 'code_mc') {
+            this.codeSnippet.classList.remove('hidden');
+            this.codeSnippet.querySelector('code').innerText = questionObj.codeSnippet;
+        } else {
+            this.codeSnippet.classList.add('hidden');
+        }
+
+        // 2. Check Type: Input vs Multiple Choice
+        if (questionObj.type === 'input') {
+            // SHOW INPUT, HIDE GRID
+            this.answerGrid.classList.add('hidden');
+            this.inputContainer.classList.remove('hidden');
+            this.playerInput.value = ''; // Clear old input
+            this.playerInput.focus();
+        } else {
+            // SHOW GRID, HIDE INPUT
+            this.answerGrid.classList.remove('hidden');
+            this.inputContainer.classList.add('hidden');
+            
+            // Populate Buttons
+            this.answerButtons.forEach((btn, index) => {
+                btn.innerText = questionObj.answers[index];
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.backgroundColor = '#ecf0f1'; 
+                btn.classList.remove('hidden');
+                
+                // Reset strikethrough from hints
+                btn.innerHTML = questionObj.answers[index]; 
+            });
+        }
     },
 
-    // --- HINT SYSTEM VISUALS ---
+    // --- HINT SYSTEM ---
     removeWrongAnswer(index) {
         const btn = this.answerButtons[index];
         btn.disabled = true;
@@ -81,16 +105,12 @@ const ui = {
 
     // --- TIMER VISUALS ---
     updateTimer(percent) {
-        // We split the percent between the two bars
-        // Each bar gets half of the percent width relative to its container (50%)
-        // Actually simpler: Set width of both bars to (percent / 2)% relative to container
         this.timerLeft.style.width = (percent / 2) + '%';
         this.timerRight.style.width = (percent / 2) + '%';
 
-        // Color Logic
-        let color = '#2ecc71'; // Green
-        if (percent < 60) color = '#f1c40f'; // Yellow
-        if (percent < 30) color = '#e74c3c'; // Red
+        let color = '#2ecc71'; 
+        if (percent < 60) color = '#f1c40f'; 
+        if (percent < 30) color = '#e74c3c'; 
         
         this.timerLeft.style.backgroundColor = color;
         this.timerRight.style.backgroundColor = color;
@@ -99,7 +119,6 @@ const ui = {
     // --- ANIMATIONS ---
     triggerBattleStartAnim() {
         this.dashboard.classList.remove('slide-up');
-        // Force Reflow
         void this.dashboard.offsetWidth; 
         this.dashboard.classList.add('slide-up');
     },

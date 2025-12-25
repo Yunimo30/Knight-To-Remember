@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Knight to Remember</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,7 +16,9 @@
         <div class="menu-content">
             <h1 class="game-title">A Knight to Remember</h1>
             <div class="menu-buttons">
-                <button id="btn-start-game" class="menu-btn">Start Journey</button>
+                <button id="btn-continue" class="menu-btn hidden">Continue</button>
+                
+                <button id="btn-start-game" class="menu-btn">New Game</button>
                 <button id="btn-tutorial" class="menu-btn">How To Play</button>
             </div>
             <div class="credits">Created by: Yunimo30</div>
@@ -24,10 +29,10 @@
         <div class="tutorial-paper">
             <h2>How To Play</h2>
             <div class="tutorial-text">
-                <p><strong>⚔️ Combat:</strong> Answer questions correctly to attack enemies. Wrong answers give the enemy a turn!</p>
-                <p><strong>🛡️ Defense:</strong> During the enemy turn, a slider will appear. Press <strong>[SPACE]</strong> in the Red Zone to block damage.</p>
-                <p><strong>🗺️ Map:</strong> Navigate the Dark Forest. Choose your path wisely—some lead to treasure, others to danger.</p>
-                <p><strong>🎒 Items:</strong> Use potions from your inventory to heal between or during battles.</p>
+                <p><strong>Combat:</strong> Answer questions correctly to attack enemies. Wrong answers give the enemy a turn!</p>
+                <p><strong>Defense:</strong> During the enemy turn, a slider will appear. Press <strong>[SPACE]</strong> in the Red Zone to block damage.</p>
+                <p><strong>Map:</strong> Navigate the Dark Forest. Choose your path wisely—some lead to treasure, others to danger.</p>
+                <p><strong>Items:</strong> Use potions from your inventory to heal between or during battles.</p>
             </div>
             <button id="btn-close-tutorial" class="menu-btn small">Back to Menu</button>
         </div>
@@ -52,16 +57,21 @@
         <div id="input-blocker" class="hidden"></div>
 
         <div id="map-screen">
-            <h2>🌲 Dark Forest Map 🌲</h2>
+            <h2 id="world-title">Dark Forest</h2>
+            
+            <button id="btn-scroll-left" class="scroll-arrow"><i class="fa-solid fa-chevron-left"></i></button>
+            <button id="btn-scroll-right" class="scroll-arrow"><i class="fa-solid fa-chevron-right"></i></button>
             <div id="map-nodes-container">
-                </div>
+            </div>
         </div>
 
         <div id="event-screen" class="hidden">
             <div class="event-content">
-                <h2 id="event-title">Exploring...</h2>
-                <div id="event-icon"><i class="fa-solid fa-question"></i></div>
-                <p id="event-desc">You carefully navigate the dark forest...</p>
+                <h2 id="event-title">Event Title</h2>
+                <div id="event-icon"></div>
+                <p id="event-desc">Event Description</p>
+                
+                <div class="modal-actions"></div> 
             </div>
         </div>
 
@@ -80,6 +90,31 @@
             </div>
             <div class="scroll-handle bottom"></div>
         </div>
+
+
+        <div id="lesson-modal" class="modal hidden">
+        <div class="lesson-content">
+            <div class="lesson-header">
+                <h2 id="lesson-title">Topic Title</h2>
+                <button id="btn-close-lesson" class="close-icon"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="lesson-body">
+                <div id="lesson-text-container">
+                    </div>
+                
+                <div class="code-display">
+                    <pre><code id="lesson-code">System.out.println("Loading...");</code></pre>
+                </div>
+            </div>
+
+            <div class="lesson-footer">
+                <div class="slide-dots" id="lesson-dots">
+                    </div>
+                <button id="btn-start-combat" class="scroll-btn confirm">COMPILE & FIGHT <i class="fa-solid fa-play"></i></button>
+            </div>
+        </div>
+    </div>
 
         <div id="turn-banner" class="turn-banner">PLAYER TURN</div>
 
@@ -103,11 +138,12 @@
             <div id="flash-overlay"></div>
 
             <div id="qte-container" class="hidden">
-                <p>PRESS [SPACE] TO BLOCK!</p>
+                <p>PRESS [SPACE] OR CLICK TO BLOCK!</p>
                 <div id="qte-bar">
                     <div id="qte-target-zone"></div>
                     <div id="qte-cursor"></div>
                 </div>
+                <button id="btn-qte-block">BLOCK!</button>
             </div>
 
             <div id="combat-feedback" class="hidden">Correct!</div>
@@ -134,12 +170,22 @@
 
                 <div id="question-box">
                     <p id="question-text">Loading...</p>
+                    
+                    <div id="code-snippet" class="hidden">
+                        <pre><code>System.___.println("Hello");</code></pre>
+                    </div>
                 </div>
+
                 <div id="answer-grid">
                     <button class="answer-btn" id="btn-0">A</button>
                     <button class="answer-btn" id="btn-1">B</button>
                     <button class="answer-btn" id="btn-2">C</button>
                     <button class="answer-btn" id="btn-3">D</button>
+                </div>
+
+                <div id="input-answer-container" class="hidden">
+                    <input type="text" id="player-input" placeholder="Type your answer here..." autocomplete="off">
+                    <button id="btn-submit-input" class="control-btn">ATTACK!</button>
                 </div>
             </div>
 
@@ -150,6 +196,68 @@
         </div>
 
     </div>
+
+
+    <div id="journal-btn-container" title="Open Journal">
+        <div id="journal-book-icon">
+            JOURNAL
+        </div>
+    </div>
+    
+    <div id="settings-btn-container" title="Settings">
+        <div id="settings-icon">
+            <i class="fa-solid fa-gear"></i>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="hidden">
+        <h3>Audio Options</h3>
+        
+        <div class="setting-row">
+            <label><i class="fa-solid fa-music"></i> Music</label>
+            <input type="range" id="vol-bgm" min="0" max="1" step="0.1" value="0.5">
+        </div>
+
+        <div class="setting-row">
+            <label><i class="fa-solid fa-sword"></i> Game SFX</label>
+            <input type="range" id="vol-game" min="0" max="1" step="0.1" value="0.5">
+        </div>
+
+        <div class="setting-row">
+            <label><i class="fa-solid fa-hand-pointer"></i> UI SFX</label>
+            <input type="range" id="vol-ui" min="0" max="1" step="0.1" value="0.1">
+        </div>
+
+        <button id="btn-close-settings" class="menu-btn small" style="width:100%; margin-top:10px;">Close</button>
+    </div>
+
+    <div id="journal-modal" class="modal hidden">
+        <div class="parchment-modal">
+            <div class="journal-sidebar" id="journal-list">
+                </div>
+            
+            <div class="journal-content">
+                <button id="btn-close-journal" class="close-icon" style="color:#3e2723; float:right;"><i class="fa-solid fa-xmark"></i></button>
+                <h2 id="journal-topic-title" style="border-bottom: 2px solid #3e2723; padding-bottom:10px;">Select a Topic</h2>
+                <div id="journal-display-area">
+                    <p>Select a lesson from the left to review your notes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="live-lesson-modal" class="modal hidden">
+        <div class="scroll-paper-content">
+            <h2 id="live-lesson-title">Topic Title</h2>
+            <div id="live-lesson-display" class="lesson-text-area">
+                </div>
+            <button id="btn-live-continue" class="scroll-btn confirm" style="width: 100%; margin-top: 20px;">
+                Store in Journal & Continue
+            </button>
+        </div>
+    </div>
+
+
 
     <div id="inventory-modal" class="modal hidden">
         <div class="modal-content">
@@ -162,6 +270,29 @@
             </div>
         </div>
     </div>
+
+    <div id="message-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="msg-title">Title</h2>
+            <div id="msg-icon" style="font-size: 3rem; margin: 15px 0;"></div>
+            <p id="msg-text">Message goes here...</p>
+            <div class="modal-actions">
+                <button id="btn-msg-action" class="scroll-btn confirm">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pause-menu" class="modal hidden">
+        <div class="modal-content" style="width: 300px;">
+            <h2>PAUSED</h2>
+            <div class="menu-buttons" style="margin-top: 20px;">
+                <button id="btn-resume" class="menu-btn small">Resume</button>
+                <button id="btn-quit" class="menu-btn small">Quit to Title</button>
+            </div>
+        </div>
+    </div>
+
+
 
     <script type="module" src="js/main.js"></script> 
 </body>

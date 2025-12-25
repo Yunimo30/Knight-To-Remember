@@ -5,26 +5,26 @@ export const GameState = {
         inventory: [], 
         hints: 1,
         maxHints: 5,
-        currentNodeId: 0 
+        currentNodeId: 0,
+        previousNodeId: 0, // NEW: Track where we came from
+        unlockedLessons: []
     },
-    level: { current: 0, max: 6 },
-    // UPDATE: Added 'desc' field to all nodes
-    map: [
-        { id: 0, type: 'start', name: "Start", desc: "Your journey begins here.", connections: [1], status: 'completed' },
-        
-        { id: 1, type: 'enemy', name: "Java Intro", topicId: "java_basics", desc: "A weak enemy guarding the forest entrance. Topic: Java Basics.", difficulty: 'easy', connections: [2, 3], status: 'unlocked' },
-        
-        { id: 2, type: 'enemy', name: "OOP Basics", topicId: "oop_concepts", desc: "A stronger foe awaits. Topic: OOP Concepts.", difficulty: 'easy', connections: [4], status: 'locked' },
-        
-        { id: 3, type: 'item', name: "Forest Cache", desc: "A quiet clearing. Looks safe.", connections: [4], status: 'locked' },
-        
-        { id: 4, type: 'enemy', name: "Code Syntax", topicId: "java_basics", desc: "Mid-level enemy. Topic: Syntax & Logic.", difficulty: 'medium', connections: [5], status: 'locked' },
-        
-        { id: 5, type: 'wildcard', name: "Unknown Path", desc: "High risk, high reward? Anything could happen.", connections: [6], status: 'locked' },
-        
-        { id: 6, type: 'boss', name: "BOSS: Undead Lord", topicId: "oop_concepts", desc: "The final test. Prepare yourself.", difficulty: 'hard', connections: [], status: 'locked' }
-    ],
-    // Active Combat State
+    // NEW: Progression Tracking
+    progression: {
+        currentWorldId: "world_1", // Default start
+        unlockedWorlds: ["world_1"],
+        clearedStages: [] 
+    },
+    // The Active Map (Populated by LevelManager)
+    currentMapData: {
+        name: "Loading...",
+        background: "",
+        nodes: []
+    },
+    // The Active Questions (Populated by LevelManager)
+    activeWorldTopics: [], 
+
+    // Active Combat State (Same as before)
     enemy: {
         name: "Enemy",
         maxHp: 2,
@@ -33,7 +33,8 @@ export const GameState = {
         icon: "fa-skull"
     },
     isPlayerTurn: true,
-    isQTEActive: false
+    isQTEActive: false,
+    currentQuestion: null
 };
 
 export const Items = {
@@ -42,8 +43,14 @@ export const Items = {
 };
 
 export const EnemyTypes = [
-    { name: "Frail Zombie", hp: 2, icon: "fa-person-falling" },
-    { name: "Zombie", hp: 3, icon: "fa-biohazard" },
-    { name: "Skeleton", hp: 3, icon: "fa-skull" },
-    { name: "Tough Undead", hp: 4, icon: "fa-dungeon" } 
+    // Standard Enemies
+    { name: "Frail Zombie", hp: 1, icon: "fa-person-falling" },     // ID 0
+    { name: "Glitch Slime", hp: 1, icon: "fa-ghost" },              // ID 1
+    { name: "Skeleton", hp: 1, icon: "fa-skull" },                  // ID 2
+    
+    // Mini-Bosses / Elites
+    { name: "Stone Sentry", hp: 1, icon: "fa-chess-rook" },         // ID 3 (Mini-Boss)
+    
+    // Bosses
+    { name: "Syntax Guardian", hp: 1, icon: "fa-gavel" }            // ID 4 (Main Boss)
 ];
