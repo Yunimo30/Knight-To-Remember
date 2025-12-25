@@ -1,19 +1,44 @@
-/* --- RESET & BASIC STYLES --- */
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+    /* Colors */
+    --bg-dark: #1a1a1a;
+    --wood-dark: #3e2723;
+    --wood-mid: #5d4037;
+    --wood-light: #8d6e63;
+    --parchment: #f3e5ab;
+    --parchment-dark: #d7c99e;
+    --gold: #f1c40f;
+    --gold-dim: #b7950b;
+    --red: #c0392b;
+    --red-bright: #e74c3c;
+    --green: #2ecc71;
+    --blue: #3498db;
+    
+    /* Updated Font Family */
+    --font-main: 'VT323', monospace;
+    --font-code: 'VT323', monospace;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Georgia', 'Times New Roman', serif; /* Medieval Font */
+    font-family: var(--font-main);
     user-select: none;
 }
 
 body {
-    background-color: #1a1a1a;
-    color: #3e2723;
-    overflow: hidden;
+    background-color: var(--bg-dark);
+    color: var(--wood-dark);
+    overflow: hidden; /* Prevents scrollbars during animations */
+    font-size: 1.2rem; /* Increased base size for readability */
 }
 
-/* --- GAME CONTAINER --- */
+/* =========================================
+   2. MAIN CONTAINER
+   ========================================= */
 #game-container {
     width: 100vw;
     height: 100vh;
@@ -22,264 +47,277 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     background-color: #2c2c2c;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
     position: relative;
-    border: 4px solid #3e2723; /* Dark Wood Border */
+    border-left: 4px solid var(--wood-dark);
+    border-right: 4px solid var(--wood-dark);
 }
 
-/* --- TOP HALF: BATTLE ARENA (50%) --- */
-#battle-arena {
-    height: 50%;
-    width: 100%;
+/* =========================================
+   3. MAIN MENU (VISUAL UPGRADE)
+   ========================================= */
+#main-menu-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    /* Darker gradient for better contrast */
+    background-image: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%), url('../assets/images/forestbg.png');
+    background-size: cover; background-position: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2000;
+    text-align: center;
+}
+
+.game-title {
+    font-size: 6rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.5), 0 5px 20px black;
+    margin-bottom: 60px;
+    letter-spacing: 5px;
+    border-bottom: 3px solid var(--wood-light);
+    padding-bottom: 20px;
+    animation: titleGlow 3s infinite alternate;
+}
+
+@keyframes titleGlow {
+    from { text-shadow: 0 0 10px rgba(241, 196, 15, 0.5), 0 5px 20px black; }
+    to { text-shadow: 0 0 25px rgba(241, 196, 15, 0.9), 0 5px 20px black; transform: scale(1.02); }
+}
+
+.menu-buttons {
+    display: flex; flex-direction: column; gap: 25px; width: 320px;
+}
+
+/* Shared Menu Button Style */
+.menu-btn {
+    padding: 18px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--wood-dark);
+    background: linear-gradient(to bottom, #f3e5ab, #d7c99e);
+    border: 3px solid var(--wood-mid);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.5);
     position: relative;
-    background-color: #2c3e50; /* Fallback */
-    background-image: url('../assets/images/forestbg.png'); /* YOUR IMAGE */
-    background-size: cover;
-    background-position: center;
-    border-bottom: 8px solid #3e2723; /* Wooden Beam Separator */
+    text-decoration: none; /* Just in case anchors are used */
+    display: flex; justify-content: center; align-items: center;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 0 15px var(--gold-dim);
+}
+
+.menu-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.credits {
+    position: absolute; bottom: 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   4. BATTLE ARENA (TOP HALF)
+   ========================================= */
+#battle-arena {
+    height: 50%; width: 100%; position: relative;
+    background-color: #2c3e50;
+    background-image: url('../assets/images/forestbg.png');
+    background-size: cover; background-position: center;
+    border-bottom: 8px solid var(--wood-dark);
     box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5);
 }
 
-/* SPRITES & POSITIONS */
+/* Sprites */
 #player-area { position: absolute; bottom: 30px; left: 15%; text-align: center; }
 #enemy-area { position: absolute; bottom: 30px; right: 15%; text-align: center; }
 
 .sprite {
-    width: 110px;
-    height: 110px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 110px; height: 110px;
+    display: flex; align-items: center; justify-content: center;
     filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5));
 }
 #player-sprite i, #enemy-sprite i {
-    font-size: 5rem;
-    color: white;
-    text-shadow: 0 0 5px black;
+    font-size: 5rem; color: white; text-shadow: 0 0 5px black;
 }
 
-/* HP BARS */
+/* HUD Elements */
 .hp-container {
     background-color: rgba(0,0,0,0.7);
     padding: 4px 12px;
     border-radius: 4px;
-    border: 2px solid #8d6e63;
-    color: #f3e5ab;
+    border: 2px solid var(--wood-light);
+    color: var(--parchment);
     font-weight: bold;
     display: inline-block;
     margin-bottom: 5px;
 }
-.hearts { color: #e74c3c; text-shadow: 0 2px 2px black; font-size: 1.2rem; }
+.hearts { color: var(--red-bright); text-shadow: 0 2px 2px black; font-size: 1.2rem; }
 
-/* TURN BANNER (Scroll Look) */
 .turn-banner {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f3e5ab;
-    color: #3e2723;
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background-color: var(--parchment);
+    color: var(--wood-dark);
     padding: 8px 30px;
     border-radius: 2px;
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: bold; font-size: 1.2rem;
     z-index: 20;
-    border: 2px solid #5d4037;
+    border: 2px solid var(--wood-mid);
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    min-width: 200px;
-    text-align: center;
-    text-transform: uppercase;
+    min-width: 200px; text-align: center; text-transform: uppercase;
 }
 
-/* FEEDBACK TEXT (Correct/Wrong) */
+/* Combat Feedback */
 #combat-feedback {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 0.95);
     padding: 20px 40px;
-    font-size: 2rem;
-    font-weight: bold;
-    border-radius: 10px;
-    border: 4px solid #f1c40f;
-    z-index: 30;
-    text-align: center;
+    font-size: 2rem; font-weight: bold;
+    border-radius: 10px; border: 4px solid var(--gold);
+    z-index: 30; text-align: center;
 }
 
-/* --- BOTTOM HALF: UI DASHBOARD (Wooden Table) --- */
+/* =========================================
+   5. UI DASHBOARD (BOTTOM HALF)
+   ========================================= */
 #ui-dashboard {
-    height: 50%;
-    width: 100%;
-    display: flex;
-    background-color: #5d4037; /* Wood Color */
+    height: 50%; width: 100%; display: flex;
+    background-color: var(--wood-mid);
+    /* Wood texture pattern */
     background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 4px);
-    position: relative;
-    z-index: 10;
-    border-top: 2px solid #8d6e63;
+    position: relative; z-index: 10;
+    border-top: 2px solid var(--wood-light);
 }
 
-/* ANIMATION: SLIDE UP */
-@keyframes slideUpFade {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-.slide-up {
-    animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* PANELS */
+/* Dashboard Panels */
 .panel-side {
     width: 18%;
     background-color: #4e342e; /* Darker Wood */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     padding: 15px;
-    border-left: 2px solid #3e2723;
-    border-right: 2px solid #3e2723;
+    border-left: 2px solid var(--wood-dark);
+    border-right: 2px solid var(--wood-dark);
     box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
 }
 
 .panel-quiz {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    flex-grow: 1; display: flex; flex-direction: column;
     padding: 25px;
-    background-color: rgba(0,0,0,0.2); /* Shadow Mat */
+    background-color: rgba(0,0,0,0.2);
 }
 
-/* STAT BOXES */
+/* Stats */
 .stat-box, .interactive-stat {
-    margin-bottom: 15px;
-    text-align: center;
-    background-color: #3e2723;
-    color: #f3e5ab;
-    padding: 10px;
-    border-radius: 4px;
-    width: 100%;
-    border: 1px solid #8d6e63;
+    margin-bottom: 15px; text-align: center;
+    background-color: var(--wood-dark);
+    color: var(--parchment);
+    padding: 10px; width: 100%;
+    border-radius: 4px; border: 1px solid var(--wood-light);
     box-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.interactive-stat {
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.interactive-stat:hover {
-    background-color: #4e342e;
-    border-color: #f1c40f;
-}
+.interactive-stat { cursor: pointer; transition: all 0.2s; }
+.interactive-stat:hover { background-color: #4e342e; border-color: var(--gold); }
 .interactive-stat:active { transform: scale(0.95); }
 
-/* TIMER BAR */
+/* Timer */
 #timer-container {
-    width: 100%;
-    height: 12px;
-    background-color: #3e2723;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #5d4037;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
+    width: 100%; height: 12px;
+    background-color: var(--wood-dark);
+    margin-bottom: 15px; border-radius: 6px;
+    border: 1px solid var(--wood-mid);
+    position: relative; display: flex; justify-content: center; overflow: hidden;
 }
-
 .timer-bar {
-    height: 100%;
-    width: 50%;
-    background-color: #f1c40f;
-    background-image: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    height: 100%; width: 50%;
+    background: linear-gradient(to bottom, #ffe082, var(--gold));
     transition: width 0.1s linear, background-color 0.2s;
 }
-
 #timer-bar-left { border-right: 1px solid rgba(255,255,255,0.2); }
 
-/* QUIZ PAPER (Parchment) */
+/* Question Display (Parchment) */
 #question-box {
-    background-color: #f3e5ab;
-    padding: 20px;
-    border-radius: 2px;
-    margin-bottom: 20px;
-    height: 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: var(--parchment);
+    padding: 20px; margin-bottom: 20px; height: 40%;
+    display: flex; align-items: center; justify-content: center;
     text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #3e2723;
-    border: 1px solid #d7c99e;
+    font-size: 1.2rem; font-weight: bold; color: var(--wood-dark);
+    border: 1px solid var(--parchment-dark);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
+    /* Furling Animation Props */
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s;
+    transform-origin: center top;
 }
-
-/* Pins */
+/* Pins on parchment */
 #question-box::after, #question-box::before {
     content: ''; position: absolute; top: 5px; width: 8px; height: 8px; 
-    background-color: #3e2723; border-radius: 50%;
+    background-color: var(--wood-dark); border-radius: 50%;
 }
 #question-box::before { left: 5px; }
 #question-box::after { right: 5px; }
 
-/* ANSWER GRID */
+/* Code Snippet Styles inside Question */
+#code-snippet {
+    background-color: #2c3e50; color: var(--gold);
+    padding: 10px; border-radius: 4px; margin-top: 10px; width: 90%;
+    text-align: left; font-family: var(--font-code);
+    border: 2px solid #34495e; box-shadow: inset 0 0 10px black;
+}
+#code-snippet code { font-family: var(--font-code); font-size: 1rem; }
+
+/* Answer Grid & Inputs */
 #answer-grid {
-    height: 50%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    height: 50%; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s;
 }
 
 .answer-btn {
     background-color: #fcf3cf;
-    border: 2px solid #8d6e63;
+    border: 2px solid var(--wood-light);
     border-radius: 4px;
-    font-size: 1rem;
-    color: #3e2723;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.1s;
-    box-shadow: 0 3px 0 #8d6e63;
+    font-size: 1rem; font-weight: bold; color: var(--wood-dark);
+    cursor: pointer; transition: all 0.1s;
+    box-shadow: 0 3px 0 var(--wood-light);
 }
-
 .answer-btn:hover:not(:disabled) { 
-    background-color: #fff; 
-    transform: translateY(-2px);
-    box-shadow: 0 5px 0 #8d6e63;
+    background-color: #fff; transform: translateY(-2px); box-shadow: 0 5px 0 var(--wood-light);
 }
-.answer-btn:active:not(:disabled) {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #8d6e63;
-}
-.answer-btn:disabled {
-    background-color: #bdc3c7;
-    border-color: #7f8c8d;
-    box-shadow: none;
-    color: #7f8c8d;
-    cursor: not-allowed;
+.answer-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--wood-light); }
+.answer-btn:disabled { 
+    background-color: #bdc3c7; border-color: #7f8c8d; box-shadow: none; color: #7f8c8d; cursor: not-allowed; 
 }
 
-/* CONTROL BUTTONS */
+/* Typed Input Alternative */
+#input-answer-container {
+    height: 50%; display: flex; flex-direction: column; justify-content: center; gap: 10px;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s;
+}
+#player-input {
+    width: 100%; padding: 15px; font-size: 1.2rem;
+    font-family: var(--font-code); font-weight: bold; color: var(--wood-dark);
+    background-color: #fcf3cf; border: 2px solid var(--wood-light);
+    border-radius: 4px; outline: none; text-align: center;
+}
+#btn-submit-input {
+    background-color: var(--red); color: white; border: 2px solid #922b21;
+}
+
+/* Control Buttons (Items / Menu) */
 .control-btn {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: white;
-    text-transform: uppercase;
-    text-shadow: 0 1px 2px black;
+    width: 100%; padding: 15px; margin-bottom: 10px;
+    border: none; border-radius: 4px;
+    font-weight: bold; cursor: pointer; font-size: 0.9rem;
+    color: white; text-transform: uppercase; text-shadow: 0 1px 2px black;
     box-shadow: 0 3px 0 rgba(0,0,0,0.5);
     transition: transform 0.1s;
 }
@@ -287,171 +325,328 @@ body {
 #btn-menu { background-color: #7f8c8d; }
 .control-btn:active { transform: translateY(3px); box-shadow: none; }
 
-/* --- MAP SCREEN (Dark Forest Theme) --- */
+/* Furled State (Hidden) */
+#question-box.furled, #answer-grid.furled, #input-answer-container.furled {
+    transform: scaleY(0); opacity: 0; pointer-events: none; height: 0; margin: 0;
+}
+
+/* =========================================
+   6. MAP SCREEN
+   ========================================= */
 #map-screen {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: #2c2c2c;
     background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../assets/images/forestbg.png');
-    background-size: cover;
-    z-index: 100;
+    background-size: cover; z-index: 100;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: #f3e5ab;
+    color: var(--parchment);
 }
 
 #map-nodes-container {
-    display: flex; flex-direction: row; justify-content: center; align-items: center;
-    gap: 60px; padding: 0 50px; height: 60%; width: 100%; overflow-x: auto;
-    /* Add a subtle "path" line behind nodes if desired, or keep clean */
+    position: relative;
+    display: flex; 
+    flex-direction: row; 
+    justify-content: center; /* Keeps it centered */
+    align-items: center;
+    /* REMOVE gap: 60px; -> We will use margins on rows for smoother animation */
+    gap: 0; 
+    padding: 0 50px; 
+    height: 60%; 
+    width: 100%; 
+    overflow-x: auto; 
+    scroll-behavior: smooth;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
 }
+#map-nodes-container::-webkit-scrollbar { display: none; }
 
+/* --- UPDATED MAP ROW --- */
 .map-row {
-    display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center;
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    align-items: center; 
+    justify-content: center;
+    
+    /* Standard Spacing (Replaces the gap) */
+    margin: 0 30px;
+    
+    /* Smooth transition for layout changes */
+    transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* MEDIEVAL MAP NODES (Runestones) */
+/* Map Nodes */
 .map-node {
-    width: 90px; /* Increased from 70px */
-    height: 90px;
-    background-color: #7f8c8d; /* Fallback */
-    /* Stone Texture Gradient */
+    width: 90px; height: 90px;
     background-image: radial-gradient(circle at 30% 30%, #95a5a6, #566573);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    /* Rough Stone Border */
     border: 4px solid #2c3e50;
     cursor: pointer;
-    font-weight: bold; 
-    color: #f3e5ab; /* Parchment Text */
+    font-weight: bold; color: var(--parchment);
     text-shadow: 1px 1px 2px black;
     box-shadow: 0 5px 15px rgba(0,0,0,0.6);
     position: relative;
     transition: transform 0.2s, box-shadow 0.2s;
-    
-    /* Text Handling */
-    text-align: center;
-    font-size: 0.85rem; /* Slightly smaller text to fit more */
-    padding: 5px; /* Padding to prevent text touching edges */
-    line-height: 1.1;
-    overflow: hidden;
+    text-align: center; font-size: 1.1rem; padding: 5px; line-height: 1.1; overflow: hidden;
 }
 
-.map-node span {
-    z-index: 2; /* Ensure text sits on top of any potential overlay */
-}
-
+.map-node span { z-index: 2; }
 .map-node:hover { 
-    transform: scale(1.15); 
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
-    z-index: 10;
+    transform: scale(1.15); box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); z-index: 10;
 }
 
-/* VARIATIONS */
-
-/* COMPLETED (Mossy Stone / Emerald) */
+/* Node Variations */
 .map-node.completed { 
-    background-image: radial-gradient(circle at 30% 30%, #2ecc71, #145a32);
-    border-color: #1e8449;
-    color: white; 
+    background-image: radial-gradient(circle at 30% 30%, var(--green), #145a32);
+    border-color: #1e8449; color: white; 
 }
-
-/* AVAILABLE (Glowing Gold Rune) */
 .map-node.available { 
-    background-image: radial-gradient(circle at 30% 30%, #f1c40f, #b7950b);
-    border-color: #d35400; 
-    color: #3e2723; 
-    text-shadow: none;
-    animation: runePulse 2s infinite; 
+    background-image: radial-gradient(circle at 30% 30%, var(--gold), var(--gold-dim));
+    border-color: #d35400; color: var(--wood-dark); 
+    text-shadow: none; animation: runePulse 2s infinite; 
 }
-
-/* LOCKED (Dark Obsidian) */
 .map-node.locked { 
     background-image: radial-gradient(circle at 30% 30%, #34495e, #1c2833);
-    border-color: #000;
-    opacity: 0.7; 
-    color: #7f8c8d; 
-    pointer-events: none;
+    border-color: #000; opacity: 0.7; color: #7f8c8d; pointer-events: none;
 }
-
-/* OBSCURED (Foggy/Mystery) */
 .map-node.obscured { 
-    background-color: transparent; 
-    background-image: none;
-    border: 3px dashed #7f8c8d; 
-    color: #bdc3c7; 
-    pointer-events: none;
-    box-shadow: none;
+    background: transparent; border: 3px dashed #7f8c8d; 
+    color: #bdc3c7; pointer-events: none; box-shadow: none;
 }
-
-/* BOSS NODE (Large Red Wax Seal) */
 .map-node.boss { 
     width: 110px; height: 110px; 
-    background-image: radial-gradient(circle at 30% 30%, #e74c3c, #922b21);
-    border: 5px double #c0392b; 
-    color: white; 
-    font-size: 1rem;
+    background-image: radial-gradient(circle at 30% 30%, var(--red-bright), #922b21);
+    border: 5px double #c0392b; color: white; font-size: 1rem;
 }
-
 .hidden-rank { display: none; }
 
-/* ANIMATIONS */
-@keyframes runePulse {
-    0% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
-    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(241, 196, 15, 0.9); border-color: #f1c40f;}
-    100% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
+/* Player Token */
+#player-token {
+    position: absolute; width: 55px; height: 55px;
+    border-radius: 50%; z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+    transition: top 0.8s ease-in-out, left 0.8s ease-in-out;
+    pointer-events: none;
+}
+.token-img { width: 90%; height: auto; display: block; }
+
+/* Scroll Arrows */
+.scroll-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 50px; height: 50px;
+    background-color: rgba(0, 0, 0, 0.7); color: var(--gold); 
+    border: 2px solid var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; cursor: pointer; z-index: 90;
+    opacity: 0; pointer-events: none; transition: all 0.3s ease;
+}
+.scroll-arrow.visible { opacity: 1; pointer-events: auto; }
+.scroll-arrow:hover { background-color: rgba(241, 196, 15, 0.2); transform: translateY(-50%) scale(1.1); }
+#btn-scroll-left { left: 20px; }
+#btn-scroll-right { right: 20px; }
+
+/* =========================================
+   7. GLOBAL ACTION BUTTONS (Fixes Native Look)
+   ========================================= */
+/* This section forces buttons in specific containers (events, cutscenes, map UI) 
+   to adopt the game theme, even if they don't have the .menu-btn class.
+   Excludes scroll-btn and skip button which have custom styling.
+*/
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene), 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene), 
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene),
+.action-btn:not(.scroll-btn):not(#btn-skip-cutscene) {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    background: linear-gradient(to bottom, #f3e5ab, #d7c99e);
+    border: 2px solid var(--wood-mid);
+    color: var(--wood-dark);
+    font-family: var(--font-main);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 5px;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 4px 0 var(--wood-mid);
 }
 
-/* --- SCROLL MODAL --- */
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene):hover, 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene):hover,
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene):hover {
+    transform: translateY(-2px);
+    background: #fff;
+    border-color: var(--gold);
+}
+
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene):active, 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene):active,
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene):active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--wood-mid);
+}
+
+/* --- SCROLL BUTTONS (Medieval RPG Style) --- */
+.scroll-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    
+    /* The New Font */
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.5rem; /* Large and legible */
+    font-weight: bold;
+    letter-spacing: 1px;
+    
+    /* Color matches the text now (Dark Wood) */
+    color: var(--wood-dark); 
+    
+    cursor: pointer;
+    padding: 5px 15px;
+    margin: 0 10px;
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    
+    transition: all 0.2s ease;
+    opacity: 0.8; /* Slightly faded ink look */
+}
+
+/* Icon Styling (The Pop of Color) */
+.scroll-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+/* Hover Effects */
+.scroll-btn:hover {
+    transform: scale(1.1); /* Grow slightly */
+    opacity: 1; /* Darken ink */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Specific Icon Colors on Hover */
+.scroll-btn.confirm:hover i {
+    color: #27ae60; /* Green checkmark */
+    transform: scale(1.2);
+}
+
+.scroll-btn.cancel:hover i {
+    color: #c0392b; /* Red X */
+    transform: scale(1.2) rotate(90deg);
+}
+
+/* --- CLOSE ICON (Matching Style) --- */
+.close-icon {
+    background: none;
+    border: none;
+    
+    /* Match the Scroll Buttons */
+    font-family: 'MedievalSharp', cursive;
+    color: var(--wood-dark);
+    
+    font-size: 2rem; /* Big X */
+    cursor: pointer;
+    position: absolute; 
+    top: 25px; 
+    right: 30px;
+    z-index: 10;
+    transition: transform 0.2s, color 0.2s;
+    opacity: 0.7;
+}
+
+.close-icon:hover {
+    color: #c0392b; /* Turns red */
+    transform: scale(1.2) rotate(90deg); /* Spins */
+    opacity: 1;
+}
+
+/* --- SKIP BUTTON FIX --- */
+#btn-skip-cutscene {
+    position: absolute; 
+    top: 30px; 
+    right: 30px;
+    bottom: auto; /* Unset bottom */
+    
+    background: rgba(0,0,0,0.5); 
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    font-family: var(--font-main);
+    padding: 8px 15px;
+    cursor: pointer;
+    z-index: 2000;
+    transition: background 0.2s;
+}
+
+#btn-skip-cutscene:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: white;
+}
+
+/* =========================================
+   8. MODALS & OVERLAYS
+   ========================================= */
+/* Generic Modal */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center; z-index: 2000;
+}
+.modal-content {
+    background-color: var(--parchment);
+    padding: 30px; border-radius: 5px; border: 4px solid var(--wood-dark);
+    width: 400px; max-width: 90%; text-align: center; color: var(--wood-dark);
+}
+.hidden, .hidden-map { display: none !important; }
+
+/* FIX: PAUSE MENU (Sizing Issue) */
+#pause-menu .modal-content {
+    min-width: 400px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Spacing between buttons */
+    padding-bottom: 40px;
+}
+#pause-menu .menu-btn {
+    width: 100%; /* Force buttons to fill container */
+}
+
+/* Scroll (Loot) Modal */
 #scroll-modal {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
     z-index: 150; display: flex; flex-direction: column; align-items: center; width: 320px;
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
-    transition: opacity 0.2s;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transition: opacity 0.2s;
 }
 #scroll-modal.hidden { opacity: 0; pointer-events: none; }
-
 .scroll-handle {
     width: 360px; height: 25px;
-    background: linear-gradient(to right, #3e2723, #5d4037, #3e2723);
-    border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5); z-index: 152;
+    background: linear-gradient(to right, var(--wood-dark), var(--wood-mid), var(--wood-dark));
+    border-radius: 12px; z-index: 152;
 }
-
 .scroll-paper {
-    width: 300px;
-    background-color: #f3e5ab;
-    /* Optional Texture if you have one, else solid color is fine */
-    /* background-image: url('../assets/images/paper_texture.png'); */
-    overflow: hidden;
-    height: 0; transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    width: 300px; background-color: var(--parchment);
+    overflow: hidden; height: 0; transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 151; position: relative;
-    border-left: 1px solid #d7c99e; border-right: 1px solid #d7c99e;
+    border-left: 1px solid var(--parchment-dark); border-right: 1px solid var(--parchment-dark);
 }
-
 #scroll-modal.active .scroll-paper { height: 320px; }
-
 .scroll-inner-content {
-    padding: 25px; text-align: center; color: #3e2723;
+    padding: 25px; text-align: center; color: var(--wood-dark);
     opacity: 0; transition: opacity 0.3s ease-in 0.3s;
     display: flex; flex-direction: column; height: 100%; justify-content: center;
 }
 #scroll-modal.active .scroll-inner-content { opacity: 1; }
 
-#scroll-title {
-    font-family: 'Georgia', serif; font-size: 1.6rem; margin-bottom: 10px;
-    color: #3e2723; text-transform: uppercase; border-bottom: 2px solid #8d6e63;
-    padding-bottom: 5px;
+/* Input Blocker */
+#input-blocker {
+    position: absolute; top: 50%; left: 0; width: 100%; height: 50%;
+    z-index: 90; background-color: rgba(0,0,0,0.3); cursor: not-allowed; transition: opacity 0.2s;
 }
-#scroll-desc { font-style: italic; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
 
-.scroll-btn {
-    padding: 10px 20px; border: 2px solid #3e2723; border-radius: 4px;
-    font-weight: bold; cursor: pointer; font-family: 'Georgia', serif;
-}
-.scroll-btn.confirm { background-color: #3e2723; color: #f3e5ab; }
-.scroll-btn.confirm:hover { background-color: #5d4037; }
-.scroll-btn.cancel { background-color: transparent; color: #3e2723; border: none; text-decoration: underline;}
-
-/* --- TRANSITION OVERLAY --- */
+/* Transition Overlay (Black fade) */
 #transition-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-color: black; z-index: 9999; opacity: 0; pointer-events: none;
@@ -459,196 +654,412 @@ body {
 }
 #transition-overlay.active { opacity: 1; pointer-events: all; }
 
-/* --- EVENT SCREEN --- */
-#event-screen {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #2c2c2c; /* Fallback */
-    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../assets/images/forestbg.png');
-    background-size: cover;
-    z-index: 80;
-    display: flex; justify-content: center; align-items: center;
-    color: #f3e5ab; text-align: center;
-}
-.event-content {
-    background-color: rgba(62, 39, 35, 0.9); /* Transparent Wood */
-    padding: 40px; border-radius: 10px; border: 2px solid #8d6e63;
-    animation: fadeIn 0.5s;
-}
-#event-icon { font-size: 5rem; margin: 20px 0; color: #f1c40f; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+/* =========================================
+   9. JOURNAL (THE BOOK)
+   ========================================= */
 
-/* --- QTE (DEFENSE) --- */
+/* Button to Open Journal */
+#journal-btn-container {
+    position: fixed; bottom: 40px; left: 40px; z-index: 100;
+    cursor: pointer; transition: transform 0.3s ease;
+}
+
+#journal-book-icon {
+    width: 90px; height: 90px;
+    background-image: url('../assets/images/journal.png'); /* Ensure this file exists! */
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    transition: transform 0.3s ease;
+    color: transparent; 
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+}
+
+#journal-btn-container:hover {
+    transform: translateY(-5px) scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(241, 196, 15, 0.6)); /* Gold Glow */
+}
+
+/* Modal Wrapper (3D Flip Effect) */
+#journal-modal {
+    perspective: 1500px; /* Increased perspective for better 3D look */
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+#journal-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+/* The Book Itself */
+.parchment-modal {
+    /* Texture: Aged Paper Base */
+    background-color: #f4e4bc; 
+    background-image: 
+        /* Subtle noise for grain */
+        radial-gradient(#d7c99e 15%, transparent 16%),
+        /* Vignette to make edges darker */
+        radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(62, 39, 35, 0.1) 100%);
+    background-size: 4px 4px, 100% 100%;
+    
+    color: var(--wood-dark);
+    font-family: var(--font-code); 
+    border-radius: 4px 12px 12px 4px; /* Rounder on right (pages), sharper on left (spine) */
+    
+    /* Depth: Multiple shadows to simulate thickness */
+    box-shadow: 
+        inset 10px 0 20px rgba(62, 39, 35, 0.2), /* Spine shadow */
+        inset -2px 0 5px rgba(0,0,0,0.1), /* Page curl right */
+        5px 5px 15px rgba(0,0,0,0.5), /* Drop shadow */
+        10px 10px 30px rgba(0,0,0,0.3);
+
+    position: relative; max-width: 900px; width: 90%; height: 75vh; min-height: 500px;
+    display: flex; flex-direction: row;
+    
+    /* Animation */
+    transform-style: preserve-3d; 
+    transform: rotateY(-90deg) translateX(-50px); 
+    transform-origin: center left;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#journal-modal:not(.hidden) .parchment-modal { 
+    transform: rotateY(0deg) translateX(0); 
+}
+
+/* Sidebar (The "Bookmark" / Table of Contents) */
+.journal-sidebar {
+    width: 30%; 
+    /* Texture: Darker, worn paper or leather strip */
+    background-color: #e6d0a1;
+    border-right: 2px solid #d7c99e;
+    
+    /* Inner shadow to look slightly recessed */
+    box-shadow: inset -5px 0 15px rgba(0,0,0,0.05);
+    
+    padding: 20px;
+    overflow-y: auto; 
+}
+
+/* Main Content Area (Lined Paper) */
+.journal-content {
+    width: 70%; padding: 40px; overflow-y: auto;
+    
+    /* Texture: Lined Paper Pattern */
+    background-color: #f4e4bc;
+    background-image: 
+        /* The Lines */
+        repeating-linear-gradient(transparent, transparent 27px, #9ab 28px),
+        /* The Red Margin Line */
+        linear-gradient(to right, transparent 30px, #e74c3c 30px, #e74c3c 31px, transparent 31px);
+    
+    /* Make text sit on the lines */
+    line-height: 28px; 
+    padding-top: 50px; /* Top margin */
+}
+
+/* Topic Buttons (Handwritten look) */
+.journal-topic-btn {
+    display: block; width: 100%; padding: 12px 10px; margin-bottom: 8px;
+    text-align: left; background: none; border: none; cursor: pointer;
+    
+    font-family: serif; /* Look more handwritten */
+    font-size: 1.1rem;
+    font-weight: bold; color: var(--wood-mid);
+    border-bottom: 1px dashed #d7c99e;
+    transition: all 0.2s;
+}
+
+.journal-topic-btn:hover {
+    color: var(--wood-dark);
+    padding-left: 15px; /* Indent on hover */
+    background-color: rgba(255,255,255,0.3);
+}
+
+.journal-topic-btn.active {
+    color: var(--red); /* Active topic looks circled/highlighted */
+    border-bottom: 2px solid var(--red);
+    background-color: rgba(255,255,255,0.5);
+}
+
+/* Locked Topics */
+.journal-topic-btn.locked {
+    color: #bcaaa4; font-style: italic; cursor: default;
+}
+.journal-topic-btn.locked:hover { padding-left: 10px; background: none; }
+
+/* Code Blocks in Journal (Taped on) */
+.journal-code-block {
+    background: #2c3e50; color: #f1c40f; 
+    border: 1px solid #1a252f; padding: 15px; margin: 20px 0;
+    font-family: var(--font-code); font-weight: normal; font-size: 0.95rem;
+    line-height: 1.4;
+    
+    /* Tape Effect */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
+    transform: rotate(-1deg);
+    position: relative;
+}
+
+/* Scotch Tape Visual */
+.journal-code-block::before {
+    content: ''; position: absolute; top: -10px; left: 40%;
+    width: 60px; height: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    transform: rotate(-2deg);
+}
+
+/* Header Styling */
+#journal-topic-title {
+    font-family: serif; font-size: 2rem; color: var(--wood-dark);
+    border-bottom: none; margin-bottom: 10px;
+    text-decoration: underline var(--wood-light); /* Wavy underline */
+}
+
+/* =========================================
+   10. QTE & ANIMATIONS
+   ========================================= */
+/* QTE Container */
 #qte-container {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     width: 60%; background-color: rgba(0,0,0,0.8);
     padding: 10px; border-radius: 10px; text-align: center;
-    color: white; z-index: 50; border: 2px solid #f39c12;
+    color: white; border: 2px solid #f39c12; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
 #qte-bar {
     width: 100%; height: 30px; background-color: #333;
     position: relative; border-radius: 15px; overflow: hidden; margin-top: 10px;
 }
 #qte-target-zone {
-    position: absolute; height: 100%; width: 20%; background-color: #e74c3c; top: 0;
+    position: absolute; height: 100%; width: 20%; background-color: var(--red-bright); top: 0;
 }
 #qte-cursor {
     position: absolute; height: 100%; width: 5px; background-color: white; top: 0; left: 0; box-shadow: 0 0 10px white;
 }
-
-/* --- INVENTORY MODAL --- */
-.modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    display: flex; justify-content: center; align-items: center; z-index: 120;
-}
-.modal-content {
-    background-color: #f3e5ab; /* Parchment */
-    padding: 30px; border-radius: 5px; border: 4px solid #3e2723;
-    width: 400px; max-width: 90%; text-align: center; color: #3e2723;
-}
-.modal-actions { margin-top: 20px; }
-.hidden { display: none !important; }
-.hidden-map { display: none !important; }
-
-/* --- INPUT BLOCKER --- */
-#input-blocker {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 90; background-color: rgba(0,0,0,0.1); cursor: not-allowed;
+#btn-qte-block {
+    background-color: var(--red-bright); color: white; border: 2px solid white;
+    padding: 10px 30px; font-size: 1.2rem; font-weight: bold;
+    border-radius: 5px; cursor: pointer; box-shadow: 0 0 10px red;
+    animation: pulse-red 0.5s infinite;
 }
 
-/* --- ANIMATIONS (Combat) --- */
-@keyframes attack-lunge-right {
-    0% { transform: translateX(0); } 50% { transform: translateX(100px); } 100% { transform: translateX(0); }
+/* Animations */
+@keyframes runePulse {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
+    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(241, 196, 15, 0.9); border-color: var(--gold);}
+    100% { transform: scale(1); box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); border-color: #d35400;}
 }
-@keyframes attack-lunge-left {
-    0% { transform: translateX(0); } 50% { transform: translateX(-100px); } 100% { transform: translateX(0); }
+@keyframes slideUpFade {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
-@keyframes flash-red {
-    0% { background-color: rgba(255,0,0,0); } 20% { background-color: rgba(255,0,0,0.4); } 100% { background-color: rgba(255,0,0,0); }
+.slide-up { animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+@keyframes attack-lunge-right { 0% { transform: translateX(0); } 50% { transform: translateX(100px); } 100% { transform: translateX(0); } }
+@keyframes attack-lunge-left { 0% { transform: translateX(0); } 50% { transform: translateX(-100px); } 100% { transform: translateX(0); } }
+@keyframes flash-red { 0% { background-color: rgba(255,0,0,0); } 20% { background-color: rgba(255,0,0,0.4); } 100% { background-color: rgba(255,0,0,0); } }
+@keyframes pulse-red { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+/* --- MAP ROW ANIMATION CLASSES --- */
+
+/* 1. collapsed state: Takes up ZERO space */
+.map-row.rank-collapsed {
+    max-width: 0;
+    margin: 0;
+    opacity: 0;
+    transform: scale(0.8);
+    overflow: hidden; /* Critical to hide content while width is 0 */
 }
+
+/* 2. Expanded state: Slides open */
+.map-row.rank-expanded {
+    max-width: 150px; /* Large enough to fit the node (90px) */
+    margin: 0 30px;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* --- MAP NODE TRANSITIONS --- */
+
+/* State 1: Hidden (Initial render) */
+.map-node.fade-start {
+    opacity: 0;
+    transform: scale(0.5); /* Starts small */
+}
+
+/* State 2: Visible (Applied after delay) */
+.map-node.fade-end {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 .anim-attack-player { animation: attack-lunge-right 0.3s ease-in-out; }
 .anim-attack-enemy { animation: attack-lunge-left 0.3s ease-in-out; }
 .anim-damage-flash { animation: flash-red 0.5s ease-out; }
+.qte-success { background-color: #a9dfbf !important; box-shadow: 0 0 15px var(--green); border-color: var(--green) !important; }
 
-/* Flash Overlay Element */
-#flash-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 5;
-}
-
-
-
-
-
-
-
-
-/* --- MAIN MENU STYLES --- */
-#main-menu-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../assets/images/forestbg.png');
-    background-size: cover; background-position: center;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 2000; /* Top Priority */
-    text-align: center;
-}
-
-.game-title {
-    font-size: 4rem;
-    color: #f1c40f; /* Gold */
-    text-transform: uppercase;
-    text-shadow: 0 5px 15px rgba(0,0,0,1);
-    margin-bottom: 50px;
-    font-family: 'Georgia', serif;
-    letter-spacing: 2px;
-    border-bottom: 2px solid #8d6e63;
-    padding-bottom: 20px;
-}
-
-.menu-buttons {
-    display: flex; flex-direction: column; gap: 20px; width: 300px;
-}
-
-.menu-btn {
-    padding: 15px;
-    font-size: 1.2rem;
-    font-family: 'Georgia', serif;
-    font-weight: bold;
-    color: #3e2723;
-    background-color: #f3e5ab; /* Parchment */
-    border: 4px solid #5d4037;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-}
-
-.menu-btn:hover {
-    transform: scale(1.05);
-    background-color: #fff;
-    border-color: #f1c40f;
-}
-
-.credits {
-    position: absolute; bottom: 20px;
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    font-family: sans-serif;
-    letter-spacing: 1px;
-}
-
-/* --- TUTORIAL SCREEN --- */
+/* Tutorial & Cutscene */
 #tutorial-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(0,0,0,0.85);
-    z-index: 2100;
+    background-color: rgba(0,0,0,0.85); z-index: 2100;
     display: flex; align-items: center; justify-content: center;
 }
-
 .tutorial-paper {
-    background-color: #f3e5ab;
-    padding: 40px; width: 600px; max-width: 90%;
-    border-radius: 5px;
-    border: 4px solid #3e2723;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    background-color: var(--parchment); padding: 40px; width: 600px; max-width: 90%;
+    border-radius: 5px; border: 4px solid var(--wood-dark);
+    text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8);
 }
-
-.tutorial-paper h2 { color: #3e2723; margin-bottom: 20px; border-bottom: 2px solid #8d6e63; display: inline-block;}
-
-.tutorial-text { text-align: left; margin-bottom: 30px; line-height: 1.6; color: #3e2723; font-size: 1.1rem;}
-.tutorial-text p { margin-bottom: 15px; }
-
-.menu-btn.small { width: auto; padding: 10px 30px; font-size: 1rem; }
-
-/* --- CUTSCENE SCREEN --- */
 #cutscene-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: black;
-    z-index: 1900; /* Below Menu, Above Game */
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: white;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: black;
+    z-index: 1900; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;
 }
-
 .lore-container {
-    max-width: 700px;
-    text-align: center;
-    font-size: 1.5rem;
-    line-height: 1.8;
-    animation: fadeUp 20s linear forwards; /* Slow scroll effect */
-    opacity: 0;
+    max-width: 700px; text-align: center; font-size: 1.5rem; line-height: 1.8;
+    animation: fadeUp 20s linear forwards; opacity: 0;
 }
-
 @keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(50px); }
-    10% { opacity: 1; transform: translateY(0); }
-    90% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-50px); }
+    0% { opacity: 0; transform: translateY(50px); } 10% { opacity: 1; transform: translateY(0); } 90% { opacity: 1; } 100% { opacity: 0; transform: translateY(-50px); }
 }
 
-#btn-skip-cutscene {
-    position: absolute; bottom: 30px; right: 30px;
-    background: transparent; border: 1px solid white; color: white;
-    padding: 10px 20px; cursor: pointer; opacity: 0.7;
+/* --- EVENT MODAL (Restored) --- */
+#event-screen {
+    /* Fixed overlay covering the whole screen */
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    
+    /* Dimmed background only (No forest image) */
+    background-color: rgba(0, 0, 0, 0.85); 
+    
+    z-index: 2000; /* Sit above Map (100) and standard Modals (120-150) */
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    
+    /* Ensure it handles opacity transitions */
+    transition: opacity 0.3s ease;
 }
-#btn-skip-cutscene:hover { opacity: 1; background-color: rgba(255,255,255,0.1); }
+
+#event-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.event-content {
+    /* The "Card" Look */
+    background-color: var(--parchment);
+    color: var(--wood-dark);
+    width: 500px;
+    max-width: 90%;
+    padding: 40px;
+    border-radius: 8px;
+    
+    /* Decoration */
+    border: 4px solid var(--wood-dark);
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    text-align: center;
+    position: relative;
+    
+    /* Animation */
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+#event-icon { 
+    font-size: 5rem; 
+    margin: 20px 0; 
+    color: var(--gold-dim); 
+    text-shadow: 0 2px 0 rgba(0,0,0,0.2);
+}
+
+#event-title {
+    font-size: 2.5rem;
+    font-family: var(--font-main);
+    color: var(--wood-dark);
+    border-bottom: 2px solid var(--wood-light);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+#event-desc {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* --- SETTINGS BUTTON (Mirrors Journal) --- */
+#settings-btn-container {
+    position: fixed; 
+    bottom: 40px; 
+    right: 40px; /* Mirrored position */
+    z-index: 2000;
+    cursor: pointer; 
+    transition: transform 0.3s ease;
+}
+
+#settings-icon {
+    width: 70px; height: 70px;
+    background: radial-gradient(#3e2723, #271c19);
+    border: 3px solid #f1c40f;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; color: #f1c40f;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+}
+
+#settings-btn-container:hover {
+    transform: rotate(90deg) scale(1.1); /* Spin effect */
+}
+
+/* --- POPOVER MODAL (Speech Bubble) --- */
+#settings-modal {
+    position: fixed;
+    bottom: 130px; /* Above the button */
+    right: 40px;   /* Aligned with button */
+    width: 250px;
+    background-color: #f3e5ab; /* Parchment */
+    border: 4px solid #3e2723;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 2001;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    
+    /* Animation */
+    transform-origin: bottom right;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#settings-modal.hidden {
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* The Triangle (Speech Bubble Tail) */
+#settings-modal::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* Push it below box */
+    right: 20px;   /* Align with button center */
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #3e2723; /* Color matches border */
+}
+
+/* --- SLIDER STYLING --- */
+.setting-row {
+    margin-bottom: 15px;
+}
+.setting-row label {
+    display: block; font-weight: bold; margin-bottom: 5px; color: #3e2723;
+}
+.setting-row input[type=range] {
+    width: 100%;
+    accent-color: #d35400; /* Orange slider */
+    cursor: pointer;
+}

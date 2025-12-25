@@ -1,0 +1,49 @@
+{
+  "lessons": {
+    "java_types": {
+      "title": "Data Types 101",
+      "slides": [
+        "In Java, every piece of data has a specific type. You cannot put text inside a number variable!",
+        "<b>int</b> (Integer): Stores whole numbers (e.g., 1, 42, -99).",
+        "<b>String</b>: Stores text. Must be wrapped in double quotes."
+      ],
+      "code": "int health = 100;\nString name = \"Paladin\";"
+    },
+    "java_print": {
+      "title": "System Output",
+      "slides": [
+        "To talk to the console, we use the System class.",
+        "<b>System.out.print()</b> keeps the cursor on the same line.",
+        "<b>System.out.println()</b> moves to a new line after printing."
+      ],
+      "code": "System.out.println(\"Hello World\");\nSystem.out.print(\"Score: \" + 10);"
+    },
+    "java_basics": {
+      "title": "Syntax Rules",
+      "slides": [
+        "Java is strict! Every command must end with a semicolon <b>;</b>",
+        "Java is <b>Case Sensitive</b>. 'System' and 'system' are different things.",
+        "Code blocks are wrapped in curly braces <b>{ }</b>."
+      ],
+      "code": "public class Game {\n   // Code goes here;\n}"
+    },
+    "java_logic": {
+      "title": "Control Flow",
+      "slides": [
+        "Code doesn't always run top-to-bottom. We can split the path.",
+        "Use <b>if</b> to check a condition. If true, the code block runs.",
+        "Use <b>else</b> to handle what happens if the condition is false."
+      ],
+      "code": "if (hp > 0) {\n  attack();\n} else {\n  gameOver();\n}"
+    },
+    "java_bool": {
+      "title": "Booleans",
+      "slides": [
+        "A <b>boolean</b> is the simplest data type.",
+        "It can only be <b>true</b> or <b>false</b>.",
+        "We use operators like <b>!</b> (NOT), <b>&&</b> (AND), and <b>||</b> (OR)."
+      ],
+      "code": "boolean isAlive = true;\nboolean hasKey = false;"
+    }
+  }
+}
