@@ -452,11 +452,12 @@ body {
    ========================================= */
 /* This section forces buttons in specific containers (events, cutscenes, map UI) 
    to adopt the game theme, even if they don't have the .menu-btn class.
+   Excludes scroll-btn and skip button which have custom styling.
 */
-#event-screen button, 
-#map-screen button:not(.scroll-arrow), 
-.modal-actions button,
-.action-btn {
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene), 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene), 
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene),
+.action-btn:not(.scroll-btn):not(#btn-skip-cutscene) {
     padding: 12px 24px;
     font-size: 1.1rem;
     background: linear-gradient(to bottom, #f3e5ab, #d7c99e);
@@ -471,36 +472,117 @@ body {
     box-shadow: 0 4px 0 var(--wood-mid);
 }
 
-#event-screen button:hover, 
-#map-screen button:not(.scroll-arrow):hover,
-.modal-actions button:hover {
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene):hover, 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene):hover,
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene):hover {
     transform: translateY(-2px);
     background: #fff;
     border-color: var(--gold);
 }
 
-#event-screen button:active, 
-#map-screen button:not(.scroll-arrow):active,
-.modal-actions button:active {
+#event-screen button:not(.scroll-btn):not(#btn-skip-cutscene):active, 
+#map-screen button:not(.scroll-arrow):not(.scroll-btn):not(#btn-skip-cutscene):active,
+.modal-actions button:not(.scroll-btn):not(#btn-skip-cutscene):active {
     transform: translateY(2px);
     box-shadow: 0 1px 0 var(--wood-mid);
 }
 
-/* Specific Fix for Cutscene Skip Button (Ghost Style) */
-#btn-skip-cutscene {
-    position: absolute; bottom: 30px; right: 30px;
-    background: rgba(0,0,0,0.5) !important; 
-    border: 2px solid rgba(255,255,255,0.5) !important;
-    color: white !important;
-    padding: 10px 20px;
-    box-shadow: none !important;
-    text-transform: uppercase;
-    font-size: 0.9rem !important;
+/* --- SCROLL BUTTONS (Medieval RPG Style) --- */
+.scroll-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    
+    /* The New Font */
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.5rem; /* Large and legible */
+    font-weight: bold;
+    letter-spacing: 1px;
+    
+    /* Color matches the text now (Dark Wood) */
+    color: var(--wood-dark); 
+    
+    cursor: pointer;
+    padding: 5px 15px;
+    margin: 0 10px;
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* Space between icon and text */
+    
+    transition: all 0.2s ease;
+    opacity: 0.8; /* Slightly faded ink look */
 }
+
+/* Icon Styling (The Pop of Color) */
+.scroll-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+/* Hover Effects */
+.scroll-btn:hover {
+    transform: scale(1.1); /* Grow slightly */
+    opacity: 1; /* Darken ink */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Specific Icon Colors on Hover */
+.scroll-btn.confirm:hover i {
+    color: #27ae60; /* Green checkmark */
+    transform: scale(1.2);
+}
+
+.scroll-btn.cancel:hover i {
+    color: #c0392b; /* Red X */
+    transform: scale(1.2) rotate(90deg);
+}
+
+/* --- CLOSE ICON (Matching Style) --- */
+.close-icon {
+    background: none;
+    border: none;
+    
+    /* Match the Scroll Buttons */
+    font-family: 'MedievalSharp', cursive;
+    color: var(--wood-dark);
+    
+    font-size: 2rem; /* Big X */
+    cursor: pointer;
+    position: absolute; 
+    top: 25px; 
+    right: 30px;
+    z-index: 10;
+    transition: transform 0.2s, color 0.2s;
+    opacity: 0.7;
+}
+
+.close-icon:hover {
+    color: #c0392b; /* Turns red */
+    transform: scale(1.2) rotate(90deg); /* Spins */
+    opacity: 1;
+}
+
+/* --- SKIP BUTTON FIX --- */
+#btn-skip-cutscene {
+    position: absolute; 
+    top: 30px; 
+    right: 30px;
+    bottom: auto; /* Unset bottom */
+    
+    background: rgba(0,0,0,0.5); 
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    font-family: var(--font-main);
+    padding: 8px 15px;
+    cursor: pointer;
+    z-index: 2000;
+    transition: background 0.2s;
+}
+
 #btn-skip-cutscene:hover {
-    background: rgba(255,255,255,0.2) !important;
-    border-color: white !important;
-    transform: none !important;
+    background: rgba(255,255,255,0.2);
+    border-color: white;
 }
 
 /* =========================================
@@ -575,84 +657,158 @@ body {
 /* =========================================
    9. JOURNAL (THE BOOK)
    ========================================= */
-/* Button */
+
+/* Button to Open Journal */
 #journal-btn-container {
     position: fixed; bottom: 40px; left: 40px; z-index: 100;
     cursor: pointer; transition: transform 0.3s ease;
 }
-#journal-book-icon {
-    width: 90px; 
-    height: 90px;
-    
-    /* Remove old CSS-book styling */
-    background: transparent; 
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-    
-    /* Add your image */
-    background-image: url('../assets/images/journal.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    
-    /* Keep the hover float effect */
-    transition: transform 0.3s ease;
-    
-    /* Remove text inside if any (optional, or hide via color transparent) */
-    color: transparent; 
-}
 
-/* Remove the "pages" pseudo-element since the image handles the look */
-#journal-book-icon::after {
-    display: none;
+#journal-book-icon {
+    width: 90px; height: 90px;
+    background-image: url('../assets/images/journal.png'); /* Ensure this file exists! */
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    transition: transform 0.3s ease;
+    color: transparent; 
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
 }
 
 #journal-btn-container:hover {
     transform: translateY(-5px) scale(1.1);
-    filter: drop-shadow(0 0 10px rgba(241, 196, 15, 0.4)); /* Gold Glow */
+    filter: drop-shadow(0 0 15px rgba(241, 196, 15, 0.6)); /* Gold Glow */
 }
 
-/* Modal (3D Flip Effect) */
+/* Modal Wrapper (3D Flip Effect) */
 #journal-modal {
-    perspective: 1000px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    perspective: 1500px; /* Increased perspective for better 3D look */
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 #journal-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
 
+/* The Book Itself */
 .parchment-modal {
-    background-color: #f4e4bc; color: var(--wood-dark);
-    font-family: var(--font-code); border-radius: 5px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    position: relative; max-width: 800px; width: 90%; height: 70vh; min-height: 500px;
+    /* Texture: Aged Paper Base */
+    background-color: #f4e4bc; 
+    background-image: 
+        /* Subtle noise for grain */
+        radial-gradient(#d7c99e 15%, transparent 16%),
+        /* Vignette to make edges darker */
+        radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(62, 39, 35, 0.1) 100%);
+    background-size: 4px 4px, 100% 100%;
+    
+    color: var(--wood-dark);
+    font-family: var(--font-code); 
+    border-radius: 4px 12px 12px 4px; /* Rounder on right (pages), sharper on left (spine) */
+    
+    /* Depth: Multiple shadows to simulate thickness */
+    box-shadow: 
+        inset 10px 0 20px rgba(62, 39, 35, 0.2), /* Spine shadow */
+        inset -2px 0 5px rgba(0,0,0,0.1), /* Page curl right */
+        5px 5px 15px rgba(0,0,0,0.5), /* Drop shadow */
+        10px 10px 30px rgba(0,0,0,0.3);
+
+    position: relative; max-width: 900px; width: 90%; height: 75vh; min-height: 500px;
     display: flex; flex-direction: row;
-    /* Animation Start */
-    transform-style: preserve-3d; transform: rotateY(-90deg); transform-origin: center left;
+    
+    /* Animation */
+    transform-style: preserve-3d; 
+    transform: rotateY(-90deg) translateX(-50px); 
+    transform-origin: center left;
     transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-#journal-modal:not(.hidden) .parchment-modal { transform: rotateY(0deg); }
 
-.journal-sidebar {
-    width: 30%; border-right: 4px double var(--wood-light); padding: 20px;
-    overflow-y: auto; background: rgba(62, 39, 35, 0.05);
+#journal-modal:not(.hidden) .parchment-modal { 
+    transform: rotateY(0deg) translateX(0); 
 }
+
+/* Sidebar (The "Bookmark" / Table of Contents) */
+.journal-sidebar {
+    width: 30%; 
+    /* Texture: Darker, worn paper or leather strip */
+    background-color: #e6d0a1;
+    border-right: 2px solid #d7c99e;
+    
+    /* Inner shadow to look slightly recessed */
+    box-shadow: inset -5px 0 15px rgba(0,0,0,0.05);
+    
+    padding: 20px;
+    overflow-y: auto; 
+}
+
+/* Main Content Area (Lined Paper) */
 .journal-content {
     width: 70%; padding: 40px; overflow-y: auto;
-    background-image: repeating-linear-gradient(white 0px, white 24px, #e0e0e0 25px);
-    line-height: 25px; 
+    
+    /* Texture: Lined Paper Pattern */
+    background-color: #f4e4bc;
+    background-image: 
+        /* The Lines */
+        repeating-linear-gradient(transparent, transparent 27px, #9ab 28px),
+        /* The Red Margin Line */
+        linear-gradient(to right, transparent 30px, #e74c3c 30px, #e74c3c 31px, transparent 31px);
+    
+    /* Make text sit on the lines */
+    line-height: 28px; 
+    padding-top: 50px; /* Top margin */
 }
+
+/* Topic Buttons (Handwritten look) */
 .journal-topic-btn {
-    display: block; width: 100%; padding: 10px; margin-bottom: 5px;
+    display: block; width: 100%; padding: 12px 10px; margin-bottom: 8px;
     text-align: left; background: none; border: none; cursor: pointer;
-    font-family: serif; font-weight: bold; color: var(--wood-mid);
-    border-bottom: 1px solid #d7ccc8;
+    
+    font-family: serif; /* Look more handwritten */
+    font-size: 1.1rem;
+    font-weight: bold; color: var(--wood-mid);
+    border-bottom: 1px dashed #d7c99e;
+    transition: all 0.2s;
 }
-.journal-topic-btn:hover, .journal-topic-btn.active {
-    background-color: rgba(93, 64, 55, 0.1); padding-left: 15px;
+
+.journal-topic-btn:hover {
+    color: var(--wood-dark);
+    padding-left: 15px; /* Indent on hover */
+    background-color: rgba(255,255,255,0.3);
 }
+
+.journal-topic-btn.active {
+    color: var(--red); /* Active topic looks circled/highlighted */
+    border-bottom: 2px solid var(--red);
+    background-color: rgba(255,255,255,0.5);
+}
+
+/* Locked Topics */
+.journal-topic-btn.locked {
+    color: #bcaaa4; font-style: italic; cursor: default;
+}
+.journal-topic-btn.locked:hover { padding-left: 10px; background: none; }
+
+/* Code Blocks in Journal (Taped on) */
 .journal-code-block {
-    background: #fff; border: 1px solid #aaa; padding: 10px; margin: 15px 0;
-    font-family: var(--font-code); font-weight: bold;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1); transform: rotate(-1deg);
+    background: #2c3e50; color: #f1c40f; 
+    border: 1px solid #1a252f; padding: 15px; margin: 20px 0;
+    font-family: var(--font-code); font-weight: normal; font-size: 0.95rem;
+    line-height: 1.4;
+    
+    /* Tape Effect */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
+    transform: rotate(-1deg);
+    position: relative;
+}
+
+/* Scotch Tape Visual */
+.journal-code-block::before {
+    content: ''; position: absolute; top: -10px; left: 40%;
+    width: 60px; height: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    transform: rotate(-2deg);
+}
+
+/* Header Styling */
+#journal-topic-title {
+    font-family: serif; font-size: 2rem; color: var(--wood-dark);
+    border-bottom: none; margin-bottom: 10px;
+    text-decoration: underline var(--wood-light); /* Wavy underline */
 }
 
 /* =========================================
