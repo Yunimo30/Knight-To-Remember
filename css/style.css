@@ -16,8 +16,11 @@
     --green: #2ecc71;
     --blue: #3498db;
     
-    /* Updated Font Family */
-    --font-main: 'VT323', monospace;
+    /* FONTS */
+    /* 1. Main Font: The Medieval Fantasy World */
+    --font-main: 'MedievalSharp', cursive;
+    
+    /* 2. Code Font: The "Digital Corruption" / Magic */
     --font-code: 'VT323', monospace;
 }
 
@@ -34,6 +37,34 @@ body {
     color: var(--wood-dark);
     overflow: hidden; /* Prevents scrollbars during animations */
     font-size: 1.2rem; /* Increased base size for readability */
+}
+
+/* =========================================
+   CODE ELEMENTS (Keep these Retro/Digital)
+   ========================================= */
+
+/* 1. The Code Snippet Box (in Combat) */
+#code-snippet, #code-snippet code, #code-snippet pre {
+    font-family: var(--font-code) !important;
+    font-size: 1.1rem; /* Bump size slightly for readability */
+    letter-spacing: 1px;
+}
+
+/* 2. The Player Input Field (Typing answers) */
+#player-input {
+    font-family: var(--font-code) !important;
+    font-size: 1.4rem;
+    letter-spacing: 2px; /* Makes typing feel more "terminal-like" */
+}
+
+/* 3. The Journal Code Blocks (Taped paper) */
+.journal-code-block {
+    font-family: var(--font-code) !important;
+}
+
+/* 4. Lesson Modal Code */
+#lesson-code {
+    font-family: var(--font-code) !important;
 }
 
 /* =========================================
@@ -58,12 +89,32 @@ body {
    ========================================= */
 #main-menu-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    /* Darker gradient for better contrast */
-    background-image: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%), url('../assets/images/forestbg.png');
-    background-size: cover; background-position: center;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden; /* Important for the zoom effect */
     z-index: 2000;
-    text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* We create a pseudo-element for the background image so we can animate it 
+   without shaking the buttons/logo */
+#main-menu-screen::before {
+    content: '';
+    position: absolute; top: -5%; left: -5%; width: 110%; height: 110%;
+    
+    /* Your Background Image */
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), /* Darker at bottom */
+        url('../assets/images/forestbg.png');
+    background-size: cover;
+    background-position: center;
+    z-index: -1; /* Behind the content */
+    
+    /* The Slow Pan Animation */
+    animation: bgPan 60s linear infinite alternate;
+}
+
+@keyframes bgPan {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.1) translate(-20px, 10px); } /* Slow zoom & pan */
 }
 
 .game-title {
@@ -81,6 +132,14 @@ body {
 @keyframes titleGlow {
     from { text-shadow: 0 0 10px rgba(241, 196, 15, 0.5), 0 5px 20px black; }
     to { text-shadow: 0 0 25px rgba(241, 196, 15, 0.9), 0 5px 20px black; transform: scale(1.02); }
+}
+
+/* UI HEADERS */
+h1, h2, h3 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: normal; /* MedievalSharp is bold enough by default */
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3); /* Etched look */
 }
 
 .menu-buttons {
@@ -102,6 +161,8 @@ body {
     position: relative;
     text-decoration: none; /* Just in case anchors are used */
     display: flex; justify-content: center; align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .menu-btn:hover {
@@ -117,7 +178,9 @@ body {
 }
 
 .credits {
-    position: absolute; bottom: 20px;
+    position: fixed; 
+    bottom: 10px; 
+    left: 40px;
     color: rgba(255,255,255,0.6);
     font-size: 0.8rem;
     font-family: sans-serif;
@@ -141,12 +204,37 @@ body {
 #enemy-area { position: absolute; bottom: 30px; right: 15%; text-align: center; }
 
 .sprite {
-    width: 110px; height: 110px;
-    display: flex; align-items: center; justify-content: center;
+    width: 220px;   /* WAS 110px -- Increased by 100% */
+    height: 220px;  /* WAS 110px -- Increased by 100% */
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5));
 }
-#player-sprite i, #enemy-sprite i {
+
+/* Ensure the image fills this new space */
+.sprite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated; /* Keeps it sharp at new size */
+    transition: transform 0.1s;
+}
+
+/* Remove the old font-size rules for icons if they conflict */
+#player-sprite i { display: none; }
+#enemy-sprite i {
     font-size: 5rem; color: white; text-shadow: 0 0 5px black;
+}
+
+/* Hurt Animation (Flashing Red) */
+.anim-hurt {
+    animation: hurtFlash 0.2s 3 alternate; /* Flashes 3 times */
+}
+
+@keyframes hurtFlash {
+    0% { filter: brightness(1) sepia(0) hue-rotate(0) saturate(1); }
+    100% { filter: brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5); } /* Flash Red */
 }
 
 /* HUD Elements */
@@ -470,6 +558,8 @@ body {
     margin: 5px;
     transition: transform 0.1s, box-shadow 0.1s;
     box-shadow: 0 4px 0 var(--wood-mid);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #event-screen button:not(.scroll-btn):not(#btn-skip-cutscene):hover, 
@@ -512,6 +602,8 @@ body {
     
     transition: all 0.2s ease;
     opacity: 0.8; /* Slightly faded ink look */
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* Icon Styling (The Pop of Color) */
@@ -1062,4 +1154,134 @@ body {
     width: 100%;
     accent-color: #d35400; /* Orange slider */
     cursor: pointer;
+}
+
+/* =========================================
+   LOADING SCREEN
+   ========================================= */
+#loading-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #000;
+    z-index: 3000; /* Highest priority */
+    display: flex; justify-content: center; align-items: center;
+    transition: opacity 1s ease-out;
+}
+.loading-text {
+    color: var(--parchment); font-family: var(--font-main); 
+    font-size: 2rem; margin-bottom: 20px; text-align: center;
+    animation: pulse-text 1.5s infinite;
+}
+.loading-bar-container {
+    width: 300px; height: 10px; background: #333;
+    border: 2px solid var(--wood-light); border-radius: 5px; overflow: hidden;
+}
+#loading-bar-fill {
+    height: 100%; width: 0%; background-color: var(--gold);
+    transition: width 0.2s linear;
+}
+@keyframes pulse-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+
+/* =========================================
+   HANGING SIGN MENU
+   ========================================= */
+/* Container to center everything */
+#sign-container {
+    display: flex; flex-direction: column; align-items: center;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+/* 1. THE TITLE BOARD (Wood Sign) */
+#title-board {
+    background: var(--wood-dark);
+    padding: 20px 60px;
+    border: 4px solid var(--wood-mid);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    position: relative;
+    z-index: 10;
+    
+    /* Start State: Low and Skinny */
+    opacity: 0;
+    transform: translateY(20vh) scaleX(0.1); 
+    width: auto;
+    white-space: nowrap;
+}
+
+/* 2. THE TEXT (Fixing the Warp) */
+#title-board .game-title {
+    font-family: 'Modern Antiqua', cursive;
+    font-size: 4rem; 
+    margin: 0; padding: 0; border: none;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 #000;
+    filter: drop-shadow(0 2px 0 black); 
+    text-transform: uppercase;
+    
+    /* FIX: Hide text initially so it doesn't look squashed */
+    opacity: 0; 
+    transform: scaleX(10); /* Counter-scale to keep text looking normal-ish if visible, or just hide */
+    transition: opacity 0.4s ease-in;
+}
+
+/* 3. ANIMATION PHASE A: RISE (Still Squashed) */
+#title-board.anim-rise {
+    opacity: 1;
+    transform: translateY(-50px) scaleX(0.1); 
+    transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s;
+}
+
+/* 4. ANIMATION PHASE B: UNFURL (Expand & Reveal Text) */
+#title-board.anim-unfurl {
+    transform: translateY(-50px) scaleX(1); 
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* When the board is unfurled, fade the text in */
+#title-board.anim-unfurl .game-title {
+    opacity: 1;
+    transform: scaleX(1); /* Reset scale */
+    transition-delay: 0.3s; /* Wait for the board to open a bit first */
+}
+
+
+/* 2. THE HANGING BUTTONS (Planks) */
+#hanging-buttons {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    margin-top: -10px; /* Overlap slightly with title */
+    perspective: 1000px;
+}
+
+/* Chains connecting Title to Buttons */
+/* REMOVED - No longer needed */
+
+/* Update the Plank style to remove the connectors */
+.menu-btn.plank {
+    width: 280px;
+    background: var(--wood-mid);
+    border: 3px solid var(--wood-dark);
+    color: var(--parchment);
+    margin-bottom: 15px; /* Increased gap since no links */
+    
+    /* Initial Hidden State */
+    transform: translateY(-20px); 
+    opacity: 0;
+    transition: none; /* Controlled by animation */
+}
+
+/* Update the Drop Animation to be a slide-down fade */
+.menu-btn.plank.drop {
+    animation: simpleDrop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes simpleDrop {
+    0% { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Remove the pseudo-elements (links) */
+.menu-btn.plank::before, .menu-btn.plank::after {
+    display: none;
 }

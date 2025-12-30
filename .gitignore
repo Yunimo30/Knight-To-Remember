@@ -1,0 +1,36 @@
+# OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Node (if using npm/node.js tools)
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Build outputs
+dist/
+build/
+.cache/
+
+# Logs
+*.log
+
+# Environment
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+.tmp/

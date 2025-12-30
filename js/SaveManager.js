@@ -1,15 +1,30 @@
+/**
+ * ============================================
+ * SAVEMANAGER - Game State Persistence
+ * ============================================
+ * Handles saving and loading game progress to browser localStorage.
+ * Persists: player stats, world progression, cleared nodes, inventory.
+ * Auto-triggered after major events (defeating enemies, collecting items).
+ */
+
 import { GameState } from './GameState.js';
 
 export const SaveManager = {
+    // Browser localStorage key for save data
     SAVE_KEY: 'knight_save_v1',
 
+    /**
+     * SAVE - Persist current game state to localStorage
+     * Called after: defeating enemies, collecting items, progressing nodes
+     */
     save() {
         try {
+            // Only save essential data (not entire GameState)
             const data = {
-                player: GameState.player,
-                progression: GameState.progression,
-                currentMapData: GameState.currentMapData,
-                timestamp: Date.now()
+                player: GameState.player,           // HP, inventory, hints, unlocked lessons
+                progression: GameState.progression, // Current world, unlocked worlds, cleared stages
+                currentMapData: GameState.currentMapData, // Node statuses (completed/locked/available)
+                timestamp: Date.now()               // When save occurred
             };
             localStorage.setItem(this.SAVE_KEY, JSON.stringify(data));
             console.log("Game Saved!");
@@ -19,6 +34,10 @@ export const SaveManager = {
         }
     },
 
+    /**
+     * LOAD - Retrieve saved game state from localStorage
+     * @returns {Object|null} Saved game data or null if no save exists
+     */
     load() {
         try {
             const json = localStorage.getItem(this.SAVE_KEY);
@@ -30,15 +49,25 @@ export const SaveManager = {
         }
     },
 
+    /**
+     * HAS SAVE - Check if a save file exists
+     * @returns {boolean} True if save data exists
+     */
     hasSave() {
         return !!localStorage.getItem(this.SAVE_KEY);
     },
 
+    /**
+     * CLEAR - Delete all save data (used when starting new game)
+     */
     clear() {
         localStorage.removeItem(this.SAVE_KEY);
     },
 
-    // Small visual indicator so players know the game saved
+    /**
+     * SHOW SAVE ICON - Visual feedback that game was saved
+     * Displays yellow floppy disk icon briefly in bottom-right corner
+     */
     showSaveIcon() {
         const existing = document.getElementById('save-icon');
         if (existing) existing.remove();
@@ -53,7 +82,7 @@ export const SaveManager = {
         `;
         document.body.appendChild(icon);
         
-        // Flash animation
+        // Fade in, then fade out after 2 seconds
         requestAnimationFrame(() => { icon.style.opacity = '1'; });
         setTimeout(() => {
             icon.style.opacity = '0';

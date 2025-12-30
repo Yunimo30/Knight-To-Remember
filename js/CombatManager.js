@@ -14,6 +14,7 @@ export const CombatManager = {
     turnTimerId: null,
     turnStartTime: 0,
     usedQuestionIds: [],
+    isProcessing: false,
     
     // QTE State
     qteAnimationId: null,
@@ -31,25 +32,51 @@ export const CombatManager = {
     },
 
     startCombat(node, isWildcard = false) {
-        AudioManager.playBGM('bgm_combat'); // Switch to Battle Theme
-        // Unhide Arena (Fix from Phase 1)
+        AudioManager.playBGM('bgm_combat'); 
         document.getElementById('battle-arena').classList.remove('hidden');
         document.getElementById('turn-banner').classList.remove('hidden');
+
+        // 1. DETERMINE ENEMY POOL BASED ON WORLD
+        const worldId = GameState.progression.currentWorldId; // "world_1", "world_2", "world_3"
+        let baseIndex = 0;
+        
+        if (worldId === 'world_2') baseIndex = 5;      // Start at ID 5 (Caves)
+        else if (worldId === 'world_3') baseIndex = 10; // Start at ID 10 (Castle)
         
         let enemyTemplate;
-        if (node.type === 'boss') enemyTemplate = EnemyTypes[4];
-        else if (node.type === 'miniboss') enemyTemplate = EnemyTypes[3];
-        else if (isWildcard) enemyTemplate = EnemyTypes[Math.floor(Math.random() * 3)];
-        else enemyTemplate = EnemyTypes[node.id % 3];
 
-        // Setup Enemy Stats
+        // 2. SELECT SPECIFIC ENEMY
+        if (node.type === 'boss') {
+            // Boss is always the last one in the set (Index + 4)
+            enemyTemplate = EnemyTypes[baseIndex + 4]; 
+        } 
+        else if (node.type === 'miniboss') {
+            // Mini-boss is second to last (Index + 3)
+            enemyTemplate = EnemyTypes[baseIndex + 3]; 
+        } 
+        else if (isWildcard) {
+            // Random standard enemy from the set (Index + 0, 1, or 2)
+            const offset = Math.floor(Math.random() * 3);
+            enemyTemplate = EnemyTypes[baseIndex + offset];
+        } 
+        else {
+            // Deterministic standard enemy based on Node ID
+            const offset = node.id % 3; 
+            enemyTemplate = EnemyTypes[baseIndex + offset];
+        }
+
+        // 3. APPLY STATS
         GameState.enemy.name = enemyTemplate.name;
         GameState.enemy.maxHp = enemyTemplate.hp;
         GameState.enemy.currentHp = enemyTemplate.hp;
         GameState.enemy.icon = enemyTemplate.icon;
-        GameState.enemy.damage = 1;
+        
+        // Dynamic Damage Scaling: World 1 = 1dmg, World 2 = 2dmg, World 3 = 3dmg
+        GameState.enemy.damage = 1; 
+        if (worldId === 'world_2') GameState.enemy.damage = 2;
+        if (worldId === 'world_3') GameState.enemy.damage = 3;
 
-        // Setup Questions
+        // --- Rest of your logic remains the same ---
         const nodeQuestions = LevelManager.getQuestionsForNode(node);
         if (nodeQuestions && nodeQuestions.length > 0) {
             GameState.currentTopicQuestions = nodeQuestions;
@@ -72,6 +99,13 @@ export const CombatManager = {
     },
 
     generateNewQuestion() {
+        // UNLOCK input for the new turn
+        this.isProcessing = false;
+        
+        // Re-enable buttons
+        const btns = document.querySelectorAll('.answer-btn');
+        btns.forEach(b => b.disabled = false);
+
         const questions = GameState.currentTopicQuestions || [];
         let availableQuestions = questions.filter(q => !this.usedQuestionIds.includes(q.id));
 
@@ -98,6 +132,16 @@ export const CombatManager = {
     },
 
     handleAnswer(selectedIndex) {
+        // 1. SPAM CHECK: If we are already processing an attack, STOP.
+        if (this.isProcessing) return; 
+        
+        // 2. LOCK INPUT immediately
+        this.isProcessing = true;
+        
+        // Disable buttons visually
+        const btns = document.querySelectorAll('.answer-btn');
+        btns.forEach(b => b.disabled = true);
+
         if (!GameState.isPlayerTurn || GameState.isQTEActive) return;
 
         this.stopTurnTimer();
@@ -121,21 +165,42 @@ export const CombatManager = {
     },
 
     processCorrectAnswer() {
-        UI.animatePlayerAttack();
-        AudioManager.playSFX('sfx_click');
-        setTimeout(() => AudioManager.playSFX('sfx_attack'), 200);
-        UI.showFeedback("Correct!", true);
-        document.getElementById('input-blocker').classList.remove('hidden');
+        this.stopTurnTimer();
+
+        // 1. Trigger Animation
+        UI.triggerPlayerAttackAnim(); 
 
         setTimeout(() => {
-            GameState.enemy.currentHp -= 1;
-            UI.shakeScreen(document.getElementById('enemy-sprite'));
-            UI.updateStats();
+            AudioManager.playSFX('sfx_attack');
+            
+            // --- FIX: Lower default damage from 10 to 1 ---
+            let dmg = 1; 
+            
+            // If the player has stats, use them
+            if (GameState.player.stats && GameState.player.stats.attack) {
+                dmg = GameState.player.stats.attack;
+            }
+
+            GameState.enemy.currentHp -= dmg;
+
+            // Ensure we don't drop below 0 logic-wise yet
+            if (GameState.enemy.currentHp < 0) GameState.enemy.currentHp = 0;
+
+            // Update UI
+            UI.updateHP(GameState.player.currentHp, GameState.player.maxHp, GameState.enemy.currentHp, GameState.enemy.maxHp);
+            
+            // Show Feedback
+            UI.showFeedback(`HIT! -${dmg}`, true);
+            
+            // Check Win
             this.checkWinCondition();
-        }, this.DELAY_ATTACK_ANIM);
+        }, 100); 
     },
 
     processWrongAnswer() {
+        this.stopTurnTimer();
+        AudioManager.playSFX('sfx_wrong');
+        UI.triggerPlayerHurtAnim();
         UI.showFeedback("Missed!", false);
         document.getElementById('input-blocker').classList.remove('hidden');
         setTimeout(() => { this.startEnemyTurn(); }, this.DELAY_TURN_SWITCH);
@@ -143,21 +208,29 @@ export const CombatManager = {
 
 checkWinCondition() {
     if (GameState.enemy.currentHp <= 0) {
-        this.stopTurnTimer();
-        setTimeout(() => {
-            UI.showFeedback("VICTORY!", true);
-            AudioManager.playBGM('bgm_forest'); // Switch back to exploration music
-            setTimeout(() => {
-                // DO NOT PUT this.cleanup() HERE! 
-                // It must be empty so the UI stays fully visible until the black screen hits.
-                
-                if(this.onVictory) this.onVictory();
-            }, 1500);
-        }, this.DELAY_DAMAGE);
+        this.winBattle();
     } else {
-        setTimeout(() => this.startEnemyTurn(), this.DELAY_TURN_SWITCH);
+        // Enemy is still alive -> Start their turn
+        setTimeout(() => this.startEnemyTurn(), 1000);
     }
 },
+
+    winBattle() {
+        this.stopTurnTimer();
+        
+        // 1. Victory Feedback
+        UI.showFeedback("VICTORY!", true);
+        
+        // 2. Wait 2 seconds, then tell Main.js we won
+        setTimeout(() => {
+            if (this.onVictory) {
+                this.onVictory(); // <--- This calls the logic in main.js to show the map correctly
+            } else {
+                console.error("Victory callback missing! Reloading...");
+                location.reload(); // Failsafe
+            }
+        }, 2000);
+    },
 
     startEnemyTurn() {
         if (GameState.enemy.currentHp <= 0) return;
@@ -253,6 +326,7 @@ checkWinCondition() {
         } else {
             UI.showFeedback("TOOK DAMAGE!", false);
             AudioManager.playSFX('sfx_hurt');  // HURT SOUND
+            UI.triggerPlayerHurtAnim();
             bar.classList.add('qte-fail');
             UI.flashDamage();
             GameState.player.currentHp -= GameState.enemy.damage;

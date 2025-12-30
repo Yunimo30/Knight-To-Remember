@@ -1,24 +1,38 @@
+/**
+ * ============================================
+ * LEVELMANAGER - Asset Loading & World Data
+ * ============================================
+ * Responsible for fetching and parsing JSON data files.
+ * Acts as the bridge between local JSON files and GameState.
+ */
+
 import { GameState } from './GameState.js';
 
 export const LevelManager = {
-    
+    /**
+     * LOAD WORLD - Initialize all assets for a specific world
+     * Fetches maps, questions, and lessons from JSON files
+     * 
+     * @param {string} worldId - "world_1", "world_2", or "world_3"
+     * @returns {Promise<boolean>} True if successful
+     */
     async loadWorld(worldId) {
         console.log(`Loading World: ${worldId}...`);
         
         try {
-            // 1. Fetch Maps
+            // Fetch map data (node definitions, connections, backgrounds)
             const mapRes = await fetch('assets/data/maps.json');
             const mapData = await mapRes.json();
             
-            // 2. Fetch Questions
+            // Fetch quiz questions organized by curriculum and topics
             const qRes = await fetch('assets/data/questions.json');
             const qData = await qRes.json();
             
-            // 3. NEW: Fetch Lessons
+            // Fetch educational lesson slides and code examples
             const lRes = await fetch('assets/data/lessons.json');
             const lData = await lRes.json();
 
-            // Find the curriculum for this world
+            // Locate this world's curriculum
             const worldCurriculum = qData.curriculum.find(c => c.worldId === worldId);
             
             if (!worldCurriculum) {
@@ -26,18 +40,18 @@ export const LevelManager = {
                 return false;
             }
 
-            // Update GameState
-            GameState.currentMapData = mapData[worldId]; 
-            GameState.activeWorldTopics = qData.curriculum.find(c => c.worldId === worldId)?.topics || []; 
-            GameState.lessonData = lData.lessons; // STORE LESSONS HERE
+            // Populate GameState with world-specific data
+            GameState.currentMapData = mapData[worldId];
+            GameState.activeWorldTopics = qData.curriculum.find(c => c.worldId === worldId)?.topics || [];
+            GameState.lessonData = lData.lessons;
             GameState.progression.currentWorldId = worldId;
-            GameState.player.currentNodeId = 0; 
+            GameState.player.currentNodeId = 0;
 
-            // Update world title
+            // Update world title display
             const titleEl = document.getElementById('world-title');
             if (titleEl) titleEl.innerText = GameState.currentMapData.name;
 
-            // Future-proofing music for different worlds
+            // Future expansion: Different music per world
             if (worldId === 'world_2') {
                 // AudioManager.playBGM('bgm_cave'); 
             }
@@ -51,11 +65,14 @@ export const LevelManager = {
         }
     },
 
+    /**
+     * UPDATE BACKGROUND - Apply background images to battle/map screens
+     * Adds dark overlay for text readability
+     */
     updateBackground(imageName) {
         const arena = document.getElementById('battle-arena');
         const mapScreen = document.getElementById('map-screen');
         
-        // Path logic (adjust if your folder structure is different)
         const bgUrl = `url('assets/images/${imageName}')`;
         const gradient = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6))`;
 
@@ -63,17 +80,20 @@ export const LevelManager = {
         if(mapScreen) mapScreen.style.backgroundImage = `${gradient}, ${bgUrl}`;
     },
 
-    // --- THIS IS THE FUNCTION THAT IS LIKELY MISSING ---
+    /**
+     * GET QUESTIONS FOR NODE - Retrieve questions based on node type
+     * Boss nodes: All questions (comprehensive test)
+     * Standard: Topic-specific questions only
+     */
     getQuestionsForNode(node) {
-        // 1. BOSS LOGIC: Return ALL questions from the current world
+        // Boss battles use ALL questions from world
         if (node.type === 'boss') {
             if (!GameState.activeWorldTopics) return [];
-            console.log("Boss Fight! aggregating all topics...");
-            // Flattens all topics into one giant array of questions
+            console.log("Boss Fight! Aggregating all topics...");
             return GameState.activeWorldTopics.flatMap(t => t.questions);
         }
 
-        // 2. STANDARD LOGIC: Return questions for specific topic
+        // Standard enemies use topic-specific questions
         if (!node.topicId) return null; 
         
         if (!GameState.activeWorldTopics) return [];
@@ -81,7 +101,7 @@ export const LevelManager = {
         const topic = GameState.activeWorldTopics.find(t => t.id === node.topicId);
         if (topic) return topic.questions;
         
-        // Fallback
+        // Fallback to all questions
         console.warn(`Topic ${node.topicId} not found, using random pool.`);
         return GameState.activeWorldTopics.flatMap(t => t.questions);
     }

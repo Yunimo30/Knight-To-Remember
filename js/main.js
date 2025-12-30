@@ -16,6 +16,31 @@ let pendingNode = null;
 // =========================================
 async function initGame() {
     try {
+        // 1. LOADING SEQUENCE
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingBar = document.getElementById('loading-bar-fill');
+        
+        // Random duration between 2000ms and 4000ms
+        const loadTime = Math.floor(Math.random() * 1000) + 2000; 
+        
+        // Animate Loading Bar
+        loadingBar.style.transitionDuration = `${loadTime}ms`;
+        
+        // Force a reflow so the transition works
+        requestAnimationFrame(() => {
+            loadingBar.style.width = '100%';
+        });
+
+        // Wait for the random load time
+        await new Promise(resolve => setTimeout(resolve, loadTime));
+
+        // 2. FADE OUT LOADER
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+            startMainMenuAnimation(); // <--- Trigger the Sign Animation
+        }, 1000);
+
         console.log("Initializing Game...");
 
         // Setup Combat Manager callbacks
@@ -23,10 +48,14 @@ async function initGame() {
             () => { // On Victory
                 // We trigger the black screen transition FIRST
                 playTransition(() => {
-                    // NOW we clean up, while the player can't see anything.
+                    
+                    // 1. SWITCH MUSIC BACK TO MAP THEME
+                    AudioManager.playBGM('bgm_forest'); 
+
+                    // 2. Clean up Combat UI
                     CombatManager.cleanup(); 
                     
-                    // Then we proceed.
+                    // 3. Mark Node Complete & Show Map
                     completeNode();
                 });
             },
@@ -106,6 +135,39 @@ async function initGame() {
     } catch (error) {
         console.error("Critical Error during Init:", error);
     }
+}
+
+function startMainMenuAnimation() {
+    const titleBoard = document.getElementById('title-board');
+    const hangingContainer = document.getElementById('hanging-buttons');
+    const btns = document.querySelectorAll('.menu-btn.plank');
+
+    // PHASE 1: Rise Up (Still furled/skinny)
+    // Moves from bottom-ish to top position
+    setTimeout(() => {
+        titleBoard.classList.add('anim-rise');
+    }, 100);
+
+    // PHASE 2: Unfurl (Expand Horizontally)
+    setTimeout(() => {
+        titleBoard.classList.add('anim-unfurl');
+    }, 1400); // Wait for rise to finish
+
+    // PHASE 3: Drop the Chains & Buttons
+    setTimeout(() => {
+        hangingContainer.classList.add('visible'); // Show chains
+        
+        // Drop buttons one by one
+        btns.forEach((btn, index) => {
+            if(!btn.classList.contains('hidden')) { // Don't animate hidden "Continue" button
+                setTimeout(() => {
+                    btn.classList.add('drop');
+                    // Add Sound Effect if you have one
+                    // AudioManager.playSFX('sfx_ui_hover'); 
+                }, index * 300); // 300ms delay between each plank
+            }
+        });
+    }, 2400); // Wait for unfurl to finish
 }
 
 // =========================================

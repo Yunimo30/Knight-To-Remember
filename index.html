@@ -9,21 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Modern+Antiqua&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div id="main-menu-screen">
-        <div class="menu-content">
-            <h1 class="game-title">A Knight to Remember</h1>
-            <div class="menu-buttons">
-                <button id="btn-continue" class="menu-btn hidden">Continue</button>
-                
-                <button id="btn-start-game" class="menu-btn">New Game</button>
-                <button id="btn-tutorial" class="menu-btn">How To Play</button>
+    <div id="loading-screen">
+        <div class="loader-content">
+            <h2 class="loading-text">Loading Assets...</h2>
+            <div class="loading-bar-container">
+                <div id="loading-bar-fill"></div>
             </div>
-            <div class="credits">Created by: Yunimo30</div>
+        </div>
+    </div>
+    <div class="credits">Created by: Yunimo30</div>
+
+    <div id="main-menu-screen">
+        <div id="sign-container">
+            <div id="title-board" class="hidden-sign">
+                <h1 class="game-title" data-text="A Knight to Remember">A Knight to Remember</h1>
+            </div>
+
+            <div id="hanging-buttons" class="hidden-chains">
+                
+                <div class="menu-buttons">
+                    <button id="btn-continue" class="menu-btn plank hidden">Continue</button>
+                    <button id="btn-start-game" class="menu-btn plank">New Game</button>
+                    <button id="btn-tutorial" class="menu-btn plank">How To Play</button>
+                </div>
+            </div>
+            
+            
         </div>
     </div>
 
@@ -86,7 +103,7 @@
                     <p id="scroll-desc">Description of the stage...</p>
                     <div class="scroll-actions">
                         <button id="scroll-btn-go" class="scroll-btn confirm">
-                            <i class="fa-solid fa-check"></i> Venture Forth
+                            <i class="fa-solid fa-check"></i> Explore
                         </button>
                         
                         <button id="scroll-btn-close" class="scroll-btn cancel">
@@ -131,7 +148,10 @@
                     <span class="hp-label">Knight</span>
                     <div id="player-hp-bar" class="hearts"></div>
                 </div>
-                <div id="player-sprite" class="sprite"><i class="fa-solid fa-user-shield"></i></div>
+                
+                <div id="player-sprite" class="sprite">
+                    <img id="hero-img" src="assets/images/PlayerIdle.png" alt="Knight">
+                </div>
             </div>
 
             <div id="enemy-area">

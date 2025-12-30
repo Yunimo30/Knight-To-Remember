@@ -151,6 +151,81 @@ const ui = {
         element.style.transform = 'translateX(5px)';
         setTimeout(() => element.style.transform = 'translateX(-5px)', 50);
         setTimeout(() => element.style.transform = 'translateX(0)', 100);
+    },
+
+    setPlayerSprite(state) {
+        const img = document.getElementById('hero-img');
+        if (!img) return;
+
+        // Map states to filenames
+        const sprites = {
+            'idle': 'assets/images/PlayerIdle.png',
+            'attack': 'assets/images/PlayerAttack1.png',
+            'hurt': 'assets/images/PlayerHurt.png'
+        };
+
+        if (sprites[state]) {
+            img.src = sprites[state];
+        }
+    },
+
+    // The Teleport Attack Animation
+    triggerPlayerAttackAnim() {
+        const playerEl = document.getElementById('player-sprite');
+        const enemyEl = document.getElementById('enemy-sprite');
+
+        // 1. Calculate distance
+        const playerRect = playerEl.getBoundingClientRect();
+        const enemyRect = enemyEl.getBoundingClientRect();
+        
+        // Stop 80px in front of enemy
+        const distance = (enemyRect.left - playerRect.left) - 80;
+
+        // 2. Teleport & Swap Sprite
+        playerEl.style.transition = 'none'; 
+        playerEl.style.transform = `translateX(${distance}px)`;
+        this.setPlayerSprite('attack');
+
+        // 3. RETURN (Updated Delay)
+        setTimeout(() => {
+            // Snap back
+            playerEl.style.transform = 'translateX(0px)';
+            this.setPlayerSprite('idle');
+        }, 1000); // <--- CHANGED FROM 250 to 1000 (1 Second Delay)
+    },
+
+    triggerPlayerHurtAnim() {
+        const heroImg = document.getElementById('hero-img');
+        this.setPlayerSprite('hurt');
+        heroImg.classList.add('anim-hurt');
+
+        setTimeout(() => {
+            this.setPlayerSprite('idle');
+            heroImg.classList.remove('anim-hurt');
+        }, 600);
+    },
+
+    updateHP(pHp, pMax, eHp, eMax) {
+        const pBar = document.getElementById('player-hp-bar');
+        const eBar = document.getElementById('enemy-hp-bar');
+
+        // Helper to generate hearts string
+        const renderHearts = (current, max) => {
+            let html = '';
+            // 1. Render Full Hearts
+            for (let i = 0; i < current; i++) {
+                html += '<i class="fa-solid fa-heart"></i> ';
+            }
+            // 2. Render Empty Hearts (Optional, to show max capacity)
+            for (let i = 0; i < (max - current); i++) {
+                html += '<i class="fa-regular fa-heart" style="opacity:0.5"></i> ';
+            }
+            return html;
+        };
+
+        // Update the containers
+        if (pBar) pBar.innerHTML = renderHearts(pHp, pMax);
+        if (eBar) eBar.innerHTML = renderHearts(eHp, eMax);
     }
 };
 
