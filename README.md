@@ -4,7 +4,7 @@ A turn-based RPG educational game where players answer Java programming question
 
 **Game Status:** Alpha (3 worlds complete)  
 **Created by:** Yunimo30  
-**Play Online:** [GitHub Pages Link Coming Soon]
+**Play Online:** [Link] (https://yunimo30.github.io/Knight-To-Remember/)
 
 ---
 
