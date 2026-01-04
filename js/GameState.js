@@ -96,27 +96,24 @@ export const Items = {
  * - World 3 (IDs 10-14): The Castle of Code - Loops/Arrays
  */
 export const EnemyTypes = [
-    // ========== WORLD 1: THE DARK FOREST ==========
-    // Teaching: Java Basics (Types, Print, Syntax, Logic)
+    // --- WORLD 1: DARK FOREST (Indices 0-4) ---
     { id: 0, name: "Frail Zombie", hp: 1, icon: "fa-person-falling" },
-    { id: 1, name: "Glitch Slime", hp: 2, icon: "fa-ghost" },
-    { id: 2, name: "Skeleton", hp: 3, icon: "fa-skull" },
-    { id: 3, name: "Stone Sentry", hp: 4, icon: "fa-chess-rook" },       // Mini-Boss
-    { id: 4, name: "Syntax Guardian", hp: 5, icon: "fa-gavel" },         // Final Boss
+    { id: 1, name: "Glitch Slime", hp: 1, icon: "fa-ghost" },
+    { id: 2, name: "Skeleton", hp: 1, icon: "fa-skull" },
+    { id: 3, name: "Stone Sentry", hp: 1, icon: "fa-chess-rook" },       // Mini-Boss
+    { id: 4, name: "Syntax Guardian", hp: 1, icon: "fa-gavel" },         // Boss
 
-    // ========== WORLD 2: THE LOGIC CAVES ==========
-    // Teaching: Conditionals and Boolean Logic
-    { id: 5, name: "Crypto Bat", hp: 3, icon: "fa-crow" },
-    { id: 6, name: "Logic Golem", hp: 4, icon: "fa-cubes" },
-    { id: 7, name: "Null Spider", hp: 4, icon: "fa-spider" },
-    { id: 8, name: "Obsidian Guard", hp: 6, icon: "fa-shield-halved" },  // Mini-Boss
-    { id: 9, name: "Binary Behemoth", hp: 8, icon: "fa-hippo" },         // Final Boss
+    // --- WORLD 2: LOGIC CAVES (Indices 5-9) ---
+    { id: 5, name: "Crypto Bat", hp: 1, icon: "fa-crow" },
+    { id: 6, name: "Logic Golem", hp: 1, icon: "fa-cubes" },
+    { id: 7, name: "Null Spider", hp: 1, icon: "fa-spider" },
+    { id: 8, name: "Obsidian Guard", hp: 1, icon: "fa-shield-halved" },  // Mini-Boss
+    { id: 9, name: "The Compiler", hp: 1, icon: "fa-brain" },            // Boss
 
-    // ========== WORLD 3: THE CASTLE OF CODE ==========
-    // Teaching: Loops and Arrays
-    { id: 10, name: "Phantom Bug", hp: 5, icon: "fa-locust" },
-    { id: 11, name: "Array Archer", hp: 5, icon: "fa-bullseye" },
-    { id: 12, name: "Infinite Looper", hp: 6, icon: "fa-rotate" },
-    { id: 13, name: "Stack Overflow", hp: 8, icon: "fa-layer-group" },   // Mini-Boss
-    { id: 14, name: "The Runtime Terror", hp: 12, icon: "fa-dragon" }    // Final Boss
+    // --- WORLD 3: CASTLE OF CODE (Indices 10-14) ---
+    { id: 10, name: "Phantom Bug", hp: 1, icon: "fa-locust" },
+    { id: 11, name: "Array Archer", hp: 1, icon: "fa-bullseye" },
+    { id: 12, name: "Infinite Looper", hp: 1, icon: "fa-rotate" },
+    { id: 13, name: "Stack Tower", hp: 1, icon: "fa-layer-group" },      // Mini-Boss
+    { id: 14, name: "Runtime Terror", hp: 12, icon: "fa-dragon" }        // Final Boss
 ];

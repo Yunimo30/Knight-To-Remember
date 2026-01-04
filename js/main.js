@@ -365,8 +365,6 @@ function updatePlayerNodeState(node) {
     }
 }
 
-// In js/main.js
-
 function completeNode() {
     const nodes = GameState.currentMapData.nodes;
     const currentNode = nodes.find(n => n.id === GameState.player.currentNodeId);
@@ -379,34 +377,45 @@ function completeNode() {
             if(nextNode) nextNode.status = 'available';
         });
     }
-
-    // --- FIX STARTS HERE ---
     
-    SaveManager.save(); // Auto-save after clearing a stage
-    
-    // 1. Always render the map first. 
-    // This covers up the combat UI with the Map Screen immediately.
+    SaveManager.save(); 
     MapRenderer.render('map-nodes-container', openScrollModal);
 
-    // 2. NOW check for Boss condition
+    // --- CHECK FOR BOSS / WORLD TRANSITION ---
     if (currentNode.type === 'boss') {
-        showGameMessage("Region Cleared!", "fa-crown", "The corruption fades...", () => {
-            if (GameState.progression.currentWorldId === 'world_1') {
-                playTransition(async () => {
-                    await LevelManager.loadWorld('world_2');
-                    GameState.player.currentNodeId = 0;
-                    GameState.player.previousNodeId = undefined;
-                    MapRenderer.render('map-nodes-container', openScrollModal);
-                    showGameMessage("New Region", "fa-map", "Entered: The Logic Caves");
-                });
-            } else {
-                showGameMessage("Alpha Complete!", "fa-trophy", "Thanks for playing!", () => location.reload());
-            }
-        });
-        return; 
-    } else if (currentNode.type === 'miniboss') {
-        showGameMessage("Mini-Boss Defeated!", "fa-shield-halved", "The guardian crumbles.");
+        const currentWorld = GameState.progression.currentWorldId;
+
+        // 1. World 1 -> World 2
+        if (currentWorld === 'world_1') {
+            showGameMessage("Region Cleared!", "fa-crown", "The corruption retreats...", () => {
+                transitionToWorld('world_2', "The Logic Caves");
+            });
+        } 
+        // 2. World 2 -> World 3
+        else if (currentWorld === 'world_2') {
+            showGameMessage("Logic Restored!", "fa-cube", "But the source remains...", () => {
+                transitionToWorld('world_3', "Castle of Code");
+            });
+        } 
+        // 3. World 3 -> THE END
+        else if (currentWorld === 'world_3') {
+            setTimeout(() => showEndScreen(), 1000);
+        }
+    } 
+    else if (currentNode.type === 'miniboss') {
+        showGameMessage("Mini-Boss Defeated!", "fa-shield-halved", "The path opens.");
     }
+}
+
+// Helper to handle the "Black Screen" load transition
+function transitionToWorld(worldId, worldName) {
+    playTransition(async () => {
+        await LevelManager.loadWorld(worldId);
+        GameState.player.currentNodeId = 0;
+        GameState.player.previousNodeId = undefined;
+        MapRenderer.render('map-nodes-container', openScrollModal);
+        showGameMessage("New Region", "fa-map", `Entered: ${worldName}`);
+    });
 }
 
 // =========================================
@@ -655,6 +664,46 @@ function openJournalTopic(topicId, isLiveEvent, targetNode = null) {
         };
     }
 }
+
+
+function showEndScreen() {
+    // 1. Hide Everything
+    document.getElementById('game-container').classList.add('hidden');
+    document.getElementById('ui-dashboard').classList.add('hidden');
+    
+    // 2. Create/Show Victory Screen
+    // We reuse the cutscene screen but with different content
+    const screen = document.getElementById('cutscene-screen');
+    const container = screen.querySelector('.lore-container');
+    const btn = document.getElementById('btn-skip-cutscene');
+    
+    screen.classList.remove('hidden');
+    btn.classList.add('hidden'); // Hide the skip button
+
+    container.innerHTML = `
+        <h1 style="color:#f1c40f; font-size:4rem; margin-bottom:20px;">SYSTEM RESTORED</h1>
+        <p style="font-size:1.5rem; line-height:1.6;">
+            The syntax corruption has been purged.<br>
+            The Princess of Logic returns to the throne.<br><br>
+            You have proven yourself, Knight.<br>
+            Your code is clean. Your logic is sound.
+        </p>
+        <div style="margin-top:40px;">
+            <p style="color:#2ecc71; font-size:2rem;">THANKS FOR PLAYING!</p>
+            <button id="btn-restart-game" class="menu-btn plank" style="margin-top:30px;">Return to Title</button>
+        </div>
+    `;
+    
+    // 3. Play Victory Music?
+    // AudioManager.playBGM('bgm_menu'); 
+
+    document.getElementById('btn-restart-game').onclick = () => {
+        SaveManager.clear(); // Optional: Clear save on win?
+        location.reload();
+    };
+}
+
+
 
 // =========================================
 // 6. DEBUG (UPDATED)

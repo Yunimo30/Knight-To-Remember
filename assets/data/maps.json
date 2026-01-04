@@ -27,26 +27,50 @@
   
   "world_2": {
     "name": "The Logic Caves",
-    "background": "cavebg.png",
+    "background": "cavebg.jpg",
     "nodes": [
         { "id": 0, "type": "start", "name": "Cave Mouth", "desc": "The air grows cold.", "connections": [1], "status": "completed" },
         
-        { "id": 1, "type": "enemy", "name": "Split Decision", "topicId": "java_logic", "desc": "The path divides ahead.", "difficulty": "easy", "connections": [2, 4], "status": "unlocked" },
+        { "id": 1, "type": "lesson", "name": "Scroll: Booleans", "topicId": "java_bool", "desc": "True or False?", "connections": [2], "status": "unlocked" },
         
-
-        { "id": 2, "type": "enemy", "name": "If-Else Tunnel", "topicId": "java_logic", "desc": "Choose your condition.", "difficulty": "medium", "connections": [3], "status": "locked" },
-        { "id": 3, "type": "item", "name": "Hidden Nook", "desc": "A quiet spot to rest.", "connections": [6], "status": "locked" },
+        { "id": 2, "type": "enemy", "name": "Boolean Bat", "topicId": "java_bool", "desc": "A creature of absolutes.", "difficulty": "easy", "connections": [3], "status": "locked" },
         
+        { "id": 3, "type": "lesson", "name": "Scroll: Logic", "topicId": "java_logic", "desc": "Control the flow.", "connections": [4], "status": "locked" },
 
-        { "id": 4, "type": "enemy", "name": "Boolean Bat", "topicId": "java_bool", "desc": "True or False?", "difficulty": "medium", "connections": [5], "status": "locked" },
-        { "id": 5, "type": "wildcard", "name": "Echo Chamber", "desc": "Strange sounds echo here.", "connections": [6], "status": "locked" },
+        { "id": 4, "type": "enemy", "name": "Split Decision", "topicId": "java_logic", "desc": "The path divides.", "difficulty": "medium", "connections": [5, 6], "status": "locked" },
         
-
-        { "id": 6, "type": "enemy", "name": "Logic Gate", "topicId": "java_logic", "desc": "The paths merge.", "difficulty": "hard", "connections": [7], "status": "locked" },
+        { "id": 5, "type": "item", "name": "Hidden Nook", "desc": "A quiet spot.", "connections": [7], "status": "locked" },
         
+        { "id": 6, "type": "enemy", "name": "If-Else Tunnel", "topicId": "java_logic", "desc": "Choose wisely.", "difficulty": "medium", "connections": [7], "status": "locked" },
 
-        { "id": 7, "type": "boss", "name": "The Compiler", "topicId": "java_logic", "desc": "The master of rules.", "difficulty": "hard", "connections": [], "status": "locked" }
+        { "id": 7, "type": "miniboss", "name": "Logic Gate", "topicId": "java_logic", "desc": "The Guardian of Order.", "difficulty": "hard", "connections": [8], "status": "locked" },
+        
+        { "id": 8, "type": "boss", "name": "The Compiler", "topicId": "java_logic", "desc": "Master of Rules.", "difficulty": "hard", "connections": [], "status": "locked" }
+    ]
+  },
+
+  "world_3": {
+    "name": "Castle of Code",
+    "background": "castlebg.png",
+    "nodes": [
+      { "id": 0, "type": "start", "name": "Drawbridge", "desc": "Enter the fortress.", "connections": [1], "status": "completed" },
+      
+      { "id": 1, "type": "lesson", "name": "Scroll: Loops", "topicId": "java_loops", "desc": "Repeating history.", "connections": [2], "status": "unlocked" },
+      
+      { "id": 2, "type": "enemy", "name": "Infinite Spinner", "topicId": "java_loops", "desc": "It never stops.", "difficulty": "easy", "connections": [3, 4], "status": "locked" },
+      
+      { "id": 3, "type": "item", "name": "Cache Memory", "desc": "A stash of supplies.", "connections": [5], "status": "locked" },
+      { "id": 4, "type": "enemy", "name": "While-Wolf", "topicId": "java_loops", "desc": "Hunts while true.", "difficulty": "medium", "connections": [5], "status": "locked" },
+      
+      { "id": 5, "type": "miniboss", "name": "Stack Tower", "topicId": "java_loops", "desc": "High altitude logic.", "difficulty": "medium", "connections": [6], "status": "locked" },
+      
+      { "id": 6, "type": "lesson", "name": "Scroll: Arrays", "topicId": "java_arrays", "desc": "Organized chaos.", "connections": [7], "status": "locked" },
+      
+      { "id": 7, "type": "enemy", "name": "Vector Vanguard", "topicId": "java_arrays", "desc": "They attack in groups.", "difficulty": "hard", "connections": [8], "status": "locked" },
+      
+      { "id": 8, "type": "wildcard", "name": "Throne Hall", "desc": "The final door.", "connections": [9], "status": "locked" },
+      
+      { "id": 9, "type": "boss", "name": "Runtime Terror", "topicId": "java_arrays", "desc": "The Index Destroyer.", "difficulty": "hard", "connections": [], "status": "locked" }
     ]
   }
-
 }

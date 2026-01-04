@@ -45,5 +45,26 @@
       ],
       "code": "boolean isAlive = true;\nboolean hasKey = false;"
     }
+    ,
+    "java_loops": {
+      "title": "Loops (Iteration)",
+      "slides": [
+        "Why write code 100 times when you can write a Loop once?",
+        "<b>for loops</b>: Run for a specific number of times.",
+        "<b>while loops</b>: Run as long as a condition remains true.",
+        "Be careful! If the condition never becomes false, you get an <b>Infinite Loop</b>."
+      ],
+      "code": "for (int i = 0; i < 5; i++) {\n  slashSword();\n}"
+    },
+    "java_arrays": {
+      "title": "Arrays",
+      "slides": [
+        "An <b>Array</b> is a collection of items stored in one variable.",
+        "Think of it like an inventory belt with numbered slots.",
+        "<b>Important:</b> Computers count from 0! The first slot is index 0.",
+        "Use <b>[]</b> to access data."
+      ],
+      "code": "String[] inventory = {\"Potion\", \"Sword\"};\nString item = inventory[0]; // Gets \"Potion\""
+    }
   }
 }

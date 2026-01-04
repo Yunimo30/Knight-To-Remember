@@ -73,6 +73,35 @@
           ]
         }
       ]
+    },
+    {
+      "worldId": "world_3",
+      "topics": [
+        {
+          "id": "java_loops",
+          "questions": [
+            { "id": "lp1", "type": "mc", "text": "Which loop is best for a known number of reps?", "answers": ["while", "for", "if", "switch"], "correct": 1, "difficulty": "easy" },
+            { "id": "lp2", "type": "code_mc", "text": "How many times does this run?", "codeSnippet": "for(int i=0; i<3; i++)", "answers": ["2", "3", "4", "0"], "correct": 1, "difficulty": "easy" },
+            { "id": "lp3", "type": "input", "text": "Type the keyword to stop a loop:", "acceptedAnswers": ["break"], "difficulty": "easy" },
+            { "id": "lp4", "type": "mc", "text": "What is 'i++'?", "answers": ["i = i + 1", "i = i + 2", "i = i - 1", "Error"], "correct": 0, "difficulty": "medium" },
+            { "id": "lp5", "type": "code_mc", "text": "What happens here?", "codeSnippet": "while(true) { print(\"Run\"); }", "answers": ["Runs once", "Runs twice", "Infinite Loop", "Error"], "correct": 2, "difficulty": "medium" },
+            { "id": "lp6", "type": "input", "text": "Type the keyword to skip the current iteration:", "acceptedAnswers": ["continue"], "difficulty": "hard" },
+            { "id": "lp7", "type": "code_mc", "text": "What is the value of x?", "codeSnippet": "int x=0; for(int i=0;i<5;i++) x++;", "answers": ["4", "5", "6", "0"], "correct": 1, "difficulty": "hard" }
+          ]
+        },
+        {
+          "id": "java_arrays",
+          "questions": [
+            { "id": "arr1", "type": "mc", "text": "What is the index of the FIRST item?", "answers": ["1", "0", "-1", "A"], "correct": 1, "difficulty": "easy" },
+            { "id": "arr2", "type": "code_mc", "text": "How do you access '10'?", "codeSnippet": "int[] nums = {10, 20, 30};", "answers": ["nums[0]", "nums[1]", "nums(1)", "nums.first"], "correct": 0, "difficulty": "easy" },
+            { "id": "arr3", "type": "input", "text": "Type the property to find array size:", "acceptedAnswers": ["length"], "difficulty": "medium" },
+            { "id": "arr4", "type": "code_mc", "text": "Which declaration is correct?", "codeSnippet": "Array of Strings", "answers": ["String array;", "String[] list;", "List string;", "Array<String>"], "correct": 1, "difficulty": "medium" },
+            { "id": "arr5", "type": "mc", "text": "What happens if you access index -1?", "answers": ["Gets last item", "Gets first item", "Crash (Exception)", "Returns null"], "correct": 2, "difficulty": "hard" },
+            { "id": "arr6", "type": "code_mc", "text": "What is the last index?", "codeSnippet": "int[] arr = new int[5];", "answers": ["5", "4", "0", "Unknown"], "correct": 1, "difficulty": "hard" },
+            { "id": "arr7", "type": "input", "text": "Type the symbol used for array index:", "acceptedAnswers": ["["], "difficulty": "hard" }
+          ]
+        }
+      ]
     }
   ]
 }
