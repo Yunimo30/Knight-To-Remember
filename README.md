@@ -1,14 +1,14 @@
-# A Knight to Remember 🏰
+# A Knight to Remember 
 
 A turn-based RPG educational game where players answer Java programming questions to defeat enemies and progress through three worlds of increasing difficulty. Learn coding fundamentals while battling logic-themed monsters!
 
 **Game Status:** Alpha (3 worlds complete)  
 **Created by:** Yunimo30  
-**Play Online:** [GitHub Pages Link Coming Soon]
+**Play Online:** [Link] (https://yunimo30.github.io/Knight-To-Remember/)
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [About the Game](#about-the-game)
 - [How to Play](#how-to-play)
@@ -63,9 +63,9 @@ A turn-based RPG educational game where players answer Java programming question
 3. **Take Damage** - Remaining damage applies to your HP
 
 #### Combat Items
-- **Hints** (⚡) - Remove wrong answers (max 5, regenerate between worlds)
-- **Potions** 🧪 - Heal yourself (found in treasure events)
-- **Journal** 📖 - Read lessons to unlock knowledge and hints
+- **Hints** (!) - Remove wrong answers (max 5, regenerate between worlds)
+- **Potions**  - Heal yourself (found in treasure events)
+- **Journal**  - Read lessons to unlock knowledge and hints
 
 ### Progression
 - **Win Combat** - Complete the node and unlock adjacent nodes
@@ -74,7 +74,7 @@ A turn-based RPG educational game where players answer Java programming question
 
 ### Saving
 - Auto-saves after each major event (defeating enemies, collecting items)
-- Floppy disk icon ⏹️ appears briefly when saving
+- Floppy disk icon appears briefly when saving
 - **Continue** button only appears if a save exists
 
 ---
@@ -220,7 +220,7 @@ export const ModuleName = {
 
 ---
 
-### World 2: The Logic Caves 🔵
+### World 2: The Logic Caves 
 **Topic:** Conditionals & Boolean Logic  
 **Difficulty:** Intermediate  
 **Enemy Count:** 5 (3 normal, 1 mini-boss, 1 boss)  
@@ -236,7 +236,7 @@ export const ModuleName = {
 
 ---
 
-### World 3: The Castle of Code 🏰
+### World 3: The Castle of Code 
 **Topic:** Loops & Arrays  
 **Difficulty:** Advanced  
 **Enemy Count:** 5 (3 normal, 1 mini-boss, 1 boss)  
